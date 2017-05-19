@@ -1,0 +1,17 @@
+#' iarm: A package for item analysis in Rasch models
+#'
+#' Tools to assess model fit and identify misfitting items for Rasch models (RM) and partial
+#' credit models (PCM). Included are item fit statistics, item-restscore association,
+#' conditional likelihood ratio tests, assessment of measurement error, reliability and targeting.
+
+#' @section Item Fit statistics:
+#' item fit statistics
+#'
+#' @section Conditional likelihood ratio tests (CLR):
+#'  vvvv
+#' @section Test properties:
+#'  vvvv
+#' @docType package
+#' @name iarm-package
+#' @aliases iarm
+NULL

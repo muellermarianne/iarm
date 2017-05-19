@@ -1,0 +1,88 @@
+#' Gamma coefficient of two ordinal variables
+#'
+#' Calculates the Gamma coefficient as a measure of association between two ordinal variables.
+#' @param x is a matrix of counts,
+#' @return Gamma coefficient, standard error and p value.
+#' @author Marianne Mueller; original version Greg Rodd
+#' @references  Agresti, A. \emph{Categorical Data Analsysis}. John Wiley & Sons, 2013, pp. 57-59.
+#' @export
+#' @examples # Association between raw score and sex of patients
+#' score <- apply(amts[, 4:13], 1, sum, na.rm = TRUE)
+#' gamma_coef(table(score,amts$sex))
+gamma_coef<-function(x){
+  n <- nrow(x)
+  m <- ncol(x)
+  pic <- pid <- matrix(0, nrow=n, ncol=m)
+  rowx <- row(x)
+  colx <- col(x)
+  for(i in 1:n){
+    for(j in 1:m){
+      pic[i, j] <- sum(x[rowx < i & colx < j]) + sum(x[rowx > i & colx > j])
+      pid[i, j] <- sum(x[rowx < i & colx > j]) + sum(x[rowx > i & colx < j])
+    }
+  }
+  C <- sum(pic*x)/2
+  D <- sum(pid*x)/2
+  psi <- 2*(D*pic - C*pid)/(C + D)^2
+  sigma2 <- sum(x*psi^2) - sum(x*psi)^2
+  gamma <- (C - D)/(C + D)
+  pwert <- 2*(1-pnorm(abs(gamma)/sqrt(sigma2)))
+  c(gamma = gamma, se = sqrt(sigma2), pvalue = pwert)
+}
+
+#' Conditional and Partial Gamma coefficients
+#'
+#' Calculates conditional und partial Gamma coefficients with confidence intervals
+#' @param x factor
+#' @param y factor
+#' @param z factor
+#' @param freq a vector of counts.
+#' @param data data frame containing the factors x, y, z and the corresponding frequencies freq.
+#' @param conf.level confidence level for the returned confidence interval.
+#' @return matrix with estimates, standard errors and confidence interval limits
+#' @export
+#' @author Marianne Mueller
+#' @references Davis, J. A. A Partial coefficient for Goodman and Kruskal's Gamma.
+#'  \emph{Journal of the American Statistical Association}, 62 (317), 1967, pp. 189-193.
+partgam <- function(x, y, z, freq, data, conf.level = 0.95){
+  xxx <- xtabs(freq ~ x + y + z, data = data)
+  n <- dim(xxx)[1]
+  m <- dim(xxx)[2]
+  k <- dim(xxx)[3]
+  sigma2.k <- rep(NA, k)
+  gamma.k  <- rep(NA, k)
+  C.k <- rep(NA, k)
+  D.k <- rep(NA, k)
+  pi.c.k <- pi.d.k <- array(0, c(n, m, k))
+  for (l in 1:k){
+    xx <- xxx[, , l]
+    row.x <- row(xx)
+    col.x <- col(xx)
+    for(i in 1:n){
+       for(j in 1:m){
+         pi.c.k[i, j, l]<-sum(xx[row.x < i & col.x < j]) + sum(xx[row.x > i & col.x > j])
+         pi.d.k[i, j, l]<-sum(xx[row.x < i & col.x > j]) + sum(xx[row.x > i & col.x < j])
+       }
+    }
+    C.k[l] <- sum(pi.c.k[, , l]*xx)/2
+    D.k[l] <- sum(pi.d.k[, , l]*xx)/2
+    psi.k <- 2*(D.k[l]*pi.c.k[, , l]-C.k[l]*pi.d.k[, , l])/(C.k[l]+D.k[l])^2
+    sigma2.k[l] <- sum(xx*psi.k^2)
+    gamma.k[l] <- (C.k[l] - D.k[l])/(C.k[l] + D.k[l])
+  }
+  C <- sum(C.k)
+  D <- sum(D.k)
+  psi <- 2*(D*pi.c.k[, , ]-C*pi.d.k[, , ])/(C + D)^2
+  sigma2 <- c(sigma2.k, sum(xxx*psi^2))
+  gamma <- c(gamma.k, (C - D)/(C + D))
+  pr2 <- 1 - (1 - conf.level)/2
+  CIa <- outer(sqrt(sigma2),qnorm(pr2)*c(-1, 1)) + gamma
+  mm <- data.frame(gamma, se = sqrt(sigma2), CI1 = ifelse(CIa[, 1] > -1 ,CIa[, 1], -1),
+  CI2 = ifelse(CIa[, 2] < 1, CIa[, 2], 1))
+  row.names(mm)= c(paste("conditional", 1:k), "partial")
+  mm
+}
+
+
+
+
