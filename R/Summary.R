@@ -7,6 +7,7 @@
 #' @param     dat.items data frame with the responses to the items.
 #' @param     label if TRUE the levels of the group factor are named according to the split used,
 #' if FALSE (default) the group factor has levels 1 and 2.
+#' @export
 #' @return   Score group variable, a factor with two levels.
 score_groups <- function(dat.items, label = FALSE){
   x <- apply(dat.items,1,sum,na.rm=T)

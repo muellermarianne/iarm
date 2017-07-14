@@ -1,15 +1,17 @@
 #' Person estimates with MLE and WLE
 #'
-#' Computes Person estimates with maximum likelihood estimation (MLE) and  weighted likelihood estimation (WLE) for raw scores 0 to m
-#' @param  object object of class eRm (output of RM or PCM)
-#' @param  properties if TRUE
+#' Computes Person estimates with maximum likelihood estimation (MLE) and  weighted likelihood estimation (WLE) for raw scores 0 to m.
+#' @param  object object of class eRm, a fitted Rasch model oder partial
+#' credit model using  the functions RM or PCM in package eRm.
+#' @param  properties if TRUE additional properties of the estimates are given (see below).
 #' @importFrom  PP PP_gpcm
 #' @export
 #' @return If properties = False a matrix containing:
 #' \item{Raw score}{raw score}
 #' \item{MLE}{MLE of person parameters}
 #' \item{WLE}{WLE of person parameters}
-#' if properties = TRUE a list with two components, one for MLE and the other for WLE. Each component
+#'
+#' If properties = TRUE a list with two components, one for MLE and the other for WLE. Each component
 #' contains:
 #' \item{Raw score}{raw score}
 #' \item{MLE or WLE}{person estimates}
@@ -69,25 +71,24 @@ person_estimates <- function(object, properties = F){
       }
  }
 
-#' Properties of the score over all items
+#' Properties of the test
 #'
-#' Computes Person estimates with maximum likelihood estimation (MLE) and  weighted likelihood estimation (WLE) for raw scores 0 to m
-#' @param  object object of class eRm (output of RM or PCM).
-#' @param  pers vector of person estimates for raw scores 0 to m.
+#' Information summarizing measurement quality of the test and test targeting.
+#' @param  object object of class eRm, a fitted Rasch model oder partial
+#' credit model using  the functions RM or PCM in package eRm.
 #' @export
 #' @return a list containing:
-#' \item{Separation reliability}{..}
+#' \item{Separation reliability}{the person separation reliability as calculated in package eRm}
 #' \item{Test difficulty}{person value with an expected score equal to half of the maximum score.}
 #' \item{Test target}{person value where test information is maximized.}
-#' \item{Test information}{..}
+#' \item{Test information}{maximal value of the test information}
 #' @references Christensen, K. B. , Kreiner, S. & Mesbah, M. (Eds.)
 #' \emph{Rasch Models in Health}. Iste and Wiley (2013), pp. 63 - 70.
 #' @author Marianne Mueller
 #' @examples
 #' rm.mod <- RM(amts[,4:13])
-#' pers_pp <-person_estimates(rm.mod, properties = TRUE)
-#' test_prop(rm.mod,pers_pp)
-test_prop <- function(object,pers){
+#' test_prop(rm.mod)
+test_prop <- function(object){
   if (!("Rm"%in%class(object))) stop("object must be of class Rm!")
   k <- dim(object$X)[2]
   if (object$model == "RM") {
@@ -112,11 +113,7 @@ test_prop <- function(object,pers){
   }
   diffic <- round(uniroot(s.theta(m/2),c(-5,5))$root,digits=3)
   target <- round(optimize(var.R,c(-4,4),maximum=T)$maximum,digits = 3)
-  if (is.list(pers))  {
-    info <- max(pers[[2]][,6]^2)
-  } else{
-    info = NULL
-  }
+  info <- max(person_estimates(object, properties = TRUE)[[2]][,6]^2)
   result <- list(SepRel(person.parameter(object))[[1]], diffic, target, info)
   names(result) = c("Separation Reliability", "Test difficulty", "Test target", "Test information")
   print(unlist(result))

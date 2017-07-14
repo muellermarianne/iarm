@@ -23,7 +23,8 @@
 #' }
 #' @docType data
 #' @keywords datasets
-#' @source ...
+#' @references Slade, A., Fear, J. & Tennant, A.  (2006) Identifying patients at risk of nursing home admission: The Leeds
+#' Elderly Assessment Dependency Screening tool (LEADS). \emph{BMC Health Services Research}, 6:31.
 #' @name amts
 #' @examples data(amts)
 #' @examples str(amts)
@@ -31,7 +32,7 @@ NULL
 
 #' Depression Screening DESC-II
 #'
-#' A dataset containing the responses of 799 patients (indication group psychiatry , otolaryngology, cardiology, neurology)
+#' A dataset containing the responses of 799 patients (indication group psychiatry, otolaryngology, cardiology, neurology)
 #' to the short form DESC-II with 10 items.
 #' There are 5 response categories from 0 = never to 4 = always. A higher score is supposed to mean a higher depression.
 
@@ -54,8 +55,10 @@ NULL
 #' }
 #' @docType data
 #' @keywords datasets
-#' @source ...
-#' @references ...
+#' @references Forkmann et al. (2009) Development and validation of the Rasch-based Depression Screening (DESC) using
+#' Rasch analysis and structural equation modelling.
+#' \emph{J Behav Ther Exp Psychiatry}, 40(3): 468-78.
+#' @seealso \url{http://psychometrikon.de/inhalt/suchen/test.php?id=000000000000000000000000000003}
 #' @name desc2
 #' @examples data(desc2)
 #' @examples str(desc2)

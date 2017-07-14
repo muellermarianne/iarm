@@ -20,9 +20,6 @@
     \item{monarch}{name of monarch, with 1 if correct and 0 otherwise.}
     \item{countbac}{count backwards 20-1, with 1 if correct and 0 otherwise.}
 }}
-\source{
-...
-}
 \description{
 A dataset containing the responses of 197 persons to the ten questions of the Abbreviated Mental Test Score (AMTS).
 The AMTS is used to identify patients with dementia.
@@ -32,5 +29,9 @@ a score of 6 or less suggests that the patient has some mental impairment.
 \examples{
 data(amts)
 str(amts)
+}
+\references{
+Slade, A., Fear, J. & Tennant, A.  (2006) Identifying patients at risk of nursing home admission: The Leeds
+Elderly Assessment Dependency Screening tool (LEADS). \emph{BMC Health Services Research}, 6:31.
 }
 \keyword{datasets}

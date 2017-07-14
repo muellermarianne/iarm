@@ -2,29 +2,27 @@
 % Please edit documentation in R/Person-Fit.R
 \name{test_prop}
 \alias{test_prop}
-\title{Properties of the score over all items}
+\title{Properties of the test}
 \usage{
-test_prop(object, pers)
+test_prop(object)
 }
 \arguments{
-\item{object}{object of class eRm (output of RM or PCM).}
-
-\item{pers}{vector of person estimates for raw scores 0 to m.}
+\item{object}{object of class eRm, a fitted Rasch model oder partial
+credit model using  the functions RM or PCM in package eRm.}
 }
 \value{
 a list containing:
-\item{Separation reliability}{..}
+\item{Separation reliability}{the person separation reliability as calculated in package eRm}
 \item{Test difficulty}{person value with an expected score equal to half of the maximum score.}
 \item{Test target}{person value where test information is maximized.}
-\item{Test information}{..}
+\item{Test information}{maximal value of the test information}
 }
 \description{
-Computes Person estimates with maximum likelihood estimation (MLE) and  weighted likelihood estimation (WLE) for raw scores 0 to m
+Information summarizing measurement quality of the test and test targeting.
 }
 \examples{
 rm.mod <- RM(amts[,4:13])
-pers_pp <-person_estimates(rm.mod, properties = TRUE)
-test_prop(rm.mod,pers_pp)
+test_prop(rm.mod)
 }
 \references{
 Christensen, K. B. , Kreiner, S. & Mesbah, M. (Eds.)

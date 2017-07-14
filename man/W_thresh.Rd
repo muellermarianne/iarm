@@ -2,18 +2,21 @@
 % Please edit documentation in R/Rasch-Model.R
 \name{W_thresh}
 \alias{W_thresh}
-\title{Construction of design matrix for partial credit model with
-the usual parameter restriction}
+\title{Construction of design matrix for partial credit model}
 \usage{
 W_thresh(x)
 }
 \arguments{
-\item{x}{vector of levels m_i for items i=1 to k.}
+\item{x}{vector of length equal to the number of items. The elements of x are the maximal response categories for the items.}
 }
 \value{
 design matrix W for PCM.
 }
 \description{
-Construction of design matrix for partial credit model with
-the usual parameter restriction
+Construction of design matrix for partial credit model  with
+the usual parameter restriction.
+}
+\examples{
+# desc2 contains 10 items with response categories from 0 to 4 each.
+W_thresh(rep(4,10))
 }

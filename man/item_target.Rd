@@ -7,10 +7,11 @@
 item_target(obj)
 }
 \arguments{
-\item{obj}{object of class "eRm" (but not "dRm")}
+\item{obj}{object of class "eRm" (but not "dRm"), a fitted partial
+credit model using  the function PCM in package eRm.}
 }
 \value{
-vector with item targets
+vector with item targets.
 }
 \description{
 The item target is the value of the person parameter where

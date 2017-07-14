@@ -20,7 +20,7 @@ partgam(x, y, z, freq, data, conf.level = 0.95)
 \item{conf.level}{confidence level for the returned confidence interval.}
 }
 \value{
-matrix with estimates, standard errors and confidence interval limits
+matrix with estimates, standard errors and confidence interval limits.
 }
 \description{
 Calculates conditional und partial Gamma coefficients with confidence intervals

@@ -21,11 +21,8 @@
     \item{DESC_2_9}{withdrawal}
     \item{DESC_2_10}{thinking of taking one's life}
 }}
-\source{
-...
-}
 \description{
-A dataset containing the responses of 799 patients (indication group psychiatry , otolaryngology, cardiology, neurology)
+A dataset containing the responses of 799 patients (indication group psychiatry, otolaryngology, cardiology, neurology)
 to the short form DESC-II with 10 items.
 There are 5 response categories from 0 = never to 4 = always. A higher score is supposed to mean a higher depression.
 }
@@ -34,6 +31,11 @@ data(desc2)
 str(desc2)
 }
 \references{
-...
+Forkmann et al. (2009) Development and validation of the Rasch-based Depression Screening (DESC) using
+Rasch analysis and structural equation modelling.
+\emph{J Behav Ther Exp Psychiatry}, 40(3): 468-78.
+}
+\seealso{
+\url{http://psychometrikon.de/inhalt/suchen/test.php?id=000000000000000000000000000003}
 }
 \keyword{datasets}

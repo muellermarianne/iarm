@@ -7,16 +7,18 @@
 person_estimates(object, properties = F)
 }
 \arguments{
-\item{object}{object of class eRm (output of RM or PCM)}
+\item{object}{object of class eRm, a fitted Rasch model oder partial
+credit model using  the functions RM or PCM in package eRm.}
 
-\item{properties}{if TRUE}
+\item{properties}{if TRUE additional properties of the estimates are given (see below).}
 }
 \value{
 If properties = False a matrix containing:
 \item{Raw score}{raw score}
 \item{MLE}{MLE of person parameters}
 \item{WLE}{WLE of person parameters}
-if properties = TRUE a list with two components, one for MLE and the other for WLE. Each component
+
+If properties = TRUE a list with two components, one for MLE and the other for WLE. Each component
 contains:
 \item{Raw score}{raw score}
 \item{MLE or WLE}{person estimates}
@@ -26,7 +28,7 @@ contains:
 \item{Score.SEM}{score sem}
 }
 \description{
-Computes Person estimates with maximum likelihood estimation (MLE) and  weighted likelihood estimation (WLE) for raw scores 0 to m
+Computes Person estimates with maximum likelihood estimation (MLE) and  weighted likelihood estimation (WLE) for raw scores 0 to m.
 }
 \examples{
 rm.mod <- RM(amts[,4:13])

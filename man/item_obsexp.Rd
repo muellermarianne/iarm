@@ -7,7 +7,8 @@
 item_obsexp(object)
 }
 \arguments{
-\item{object}{object of class "Rm" (output of RM or PCM).}
+\item{object}{object of class "Rm", a fitted Rasch model oder partial
+credit model using  the functions RM or PCM in package eRm.}
 }
 \value{
 list with observed and expected mean scores together with standardized residuals for the two score groups.
@@ -18,6 +19,9 @@ together with standardized residuals. If the Andersen's CLR test has shown some 
 this comparison can indicate which items might be responsable.
 }
 \examples{
+rm.mod <- RM(amts[,4:13])
+item_obsexp(rm.mod)
+
 pc.mod <- PCM(desc2[,5:14])
 item_obsexp(pc.mod)
 }

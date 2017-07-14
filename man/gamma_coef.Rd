@@ -7,7 +7,7 @@
 gamma_coef(x)
 }
 \arguments{
-\item{x}{is a matrix of counts,}
+\item{x}{is a matrix of counts.}
 }
 \value{
 Gamma coefficient, standard error and p value.
@@ -19,6 +19,10 @@ Calculates the Gamma coefficient as a measure of association between two ordinal
 # Association between raw score and sex of patients
 score <- apply(amts[, 4:13], 1, sum, na.rm = TRUE)
 gamma_coef(table(score,amts$sex))
+
+# Association between raw score and indication group of patients
+score <- apply(desc2[, 5:14], 1, sum, na.rm = TRUE)
+gamma_coef(table(score,desc2$group))
 }
 \references{
 Agresti, A. \emph{Categorical Data Analsysis}. John Wiley & Sons, 2013, pp. 57-59.

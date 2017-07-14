@@ -7,9 +7,9 @@
 \method{print}{outfit}(x, ...)
 }
 \arguments{
-\item{x}{object of class outfit}
+\item{x}{object of class outfit.}
 
-\item{...}{arguments passed to other functions}
+\item{...}{arguments passed to other functions.}
 }
 \description{
 Print method for output of out_infit

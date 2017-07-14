@@ -7,7 +7,8 @@
 item_restscore(object)
 }
 \arguments{
-\item{object}{an object of class "Rm" (output of RM or PCM)}
+\item{object}{an object of class "Rm", a fitted Rasch model oder partial
+credit model using  the functions RM or PCM in package eRm.}
 }
 \value{
 a matrix containing:
@@ -15,11 +16,11 @@ a matrix containing:
 \item{expected}{expected gamma coefficients}
 \item{se}{standard errors}
 \item{pvalue}{p values (under normal distribution assumption)}
-\item{sig}{significance stars: 0 " *** "  0.001 " ** " 0.01 " * " 0.05  " . " 0.1 " " 1}
+\item{sig}{significance stars: 0  " *** "  0.001  " ** "  0.01  " * "  0.05   " . "  0.1  " "  1}
 }
 \description{
-The observed gamma coefficient between the score of a single item and the total score of the remaining items
-is compared with the corresponding expected gamma coefficient under the Rasch model.
+The observed Gamma coefficient between the score of a single item and the total score of the remaining items
+is compared with the corresponding expected Gamma coefficient under the Rasch model.
 }
 \examples{
 rm.mod <- RM(amts[,4:13])

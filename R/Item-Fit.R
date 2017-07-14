@@ -1,9 +1,3 @@
-#' Expected values and variances  for polytomous and  binary data
-#'
-#' @importFrom psychotools elementary_symmetric_functions
-#' @param  data  dataframe with the responses to the items
-#' @param  coeff Liste mit Schwellenwerten betasum.l or betas
-#' @return list with two matrices (n x k),  one with the expected values, the other with all variances
 expvar <- function(data, coeff){
   rv <- rowSums(data, na.rm = TRUE)
   rv[rv==0] <- NA
@@ -44,11 +38,16 @@ expvar <- function(data, coeff){
 #' Homogeneity of item responses in the low and high score groups is analyzed by looking at observed and expected item mean scores
 #' together with standardized residuals. If the Andersen's CLR test has shown some evidence against homogeneity,
 #' this comparison can indicate which items might be responsable.
-#' @param  object object of class "Rm" (output of RM or PCM).
+#' @param  object object of class "Rm", a fitted Rasch model oder partial
+#' credit model using  the functions RM or PCM in package eRm.
 #' @return list with observed and expected mean scores together with standardized residuals for the two score groups.
 #' @author Marianne Mueller
+#' @importFrom psychotools elementary_symmetric_functions
 #' @export
 #' @examples
+#' rm.mod <- RM(amts[,4:13])
+#' item_obsexp(rm.mod)
+#'
 #' pc.mod <- PCM(desc2[,5:14])
 #' item_obsexp(pc.mod)
 item_obsexp <- function(object){
@@ -91,13 +90,19 @@ item_obsexp <- function(object){
 #' To avoid bias observed item responses are compared to expected responses under
 #' the conditional distribution of responses given the total score. This leads to standardized  residuals
 #' which can be summarized to outfit and infit statistics in the usual way.
-#' @param  object an object of class "Rm" (output of RM or PCM)
+#' @param  object an object of class "Rm", a fitted Rasch model oder partial
+#' credit model using  the functions RM or PCM in package eRm.
 #' @param se if TRUE the standard errors will be included.
+#' @details The fit statistics and their standard errors are calculated as described in Christensen et al.
+#' P values are are based on the normal distribution of the standardized fit statistics.
 #' @author Marianne Mueller
 #' @export
-#' @references Kreiner, S. & Christensen, K. B. (2011) Exact evaluation of Bias in Rasch model residuals.
+#' @references Christensen, K. B. , Kreiner, S. & Mesbah, M. (Eds.)
+#' \emph{Rasch Models in Health}. Iste and Wiley (2013), pp. 86 - 90.
+#'
+#'  Kreiner, S. & Christensen, K. B. (2011) Exact evaluation of Bias in Rasch model residuals.
 #' \emph{Advances in Mathematics Research}, 12, 19-40.
-#' @return an object of class outfit
+#' @return an object of class outfit containing:
 #' \item{outfit}{outfit statistics}
 #' \item{outfit.se}{standard errors of outfit statistics}
 #' \item{out.pvalue}{p values of outfit statistics}
@@ -172,8 +177,8 @@ out_infit <- function(object,se=TRUE){
 }
 
 #' Print method for output of out_infit
-#' @param x object of class outfit
-#' @param ... arguments passed to other functions
+#' @param x object of class outfit.
+#' @param ... arguments passed to other functions.
 #' @export
 print.outfit <- function(x, ...){
   if(length(x)==2) {
@@ -191,13 +196,7 @@ print.outfit <- function(x, ...){
 
 
 
-#' Conditional probability for item i that X_i=x given score R=r
-#'
-#' @param i item number.
-#' @param x response for item i.
-#' @param r  total score.
-#' @param coeff item difficulty estimates beta  (-coef(RM(data)))
-#' @return estimated probability
+
 pscore_poly  <- function(i,x,r,coeff){
   pscore <- c()
   m <- sum(sapply(coeff, length))
@@ -213,16 +212,17 @@ pscore_poly  <- function(i,x,r,coeff){
 
 #' Item restscore association
 #'
-#' The observed gamma coefficient between the score of a single item and the total score of the remaining items
-#' is compared with the corresponding expected gamma coefficient under the Rasch model.
-#' @param object an object of class "Rm" (output of RM or PCM)
+#' The observed Gamma coefficient between the score of a single item and the total score of the remaining items
+#' is compared with the corresponding expected Gamma coefficient under the Rasch model.
+#' @param object an object of class "Rm", a fitted Rasch model oder partial
+#' credit model using  the functions RM or PCM in package eRm.
 #' @export
 #' @return a matrix containing:
 #' \item{observed}{observed gamma coefficients}
 #' \item{expected}{expected gamma coefficients}
 #' \item{se}{standard errors}
 #' \item{pvalue}{p values (under normal distribution assumption)}
-#' \item{sig}{significance stars: 0 " *** "  0.001 " ** " 0.01 " * " 0.05  " . " 0.1 " " 1}
+#' \item{sig}{significance stars: 0  " *** "  0.001  " ** "  0.01  " * "  0.05   " . "  0.1  " "  1}
 #' @references Kreiner, S. (2011). A note on item-restscore association in Rasch models.
 #' \emph{Applied Psychological Measurement}, 35, 557-561.
 #' @author Marianne Mueller

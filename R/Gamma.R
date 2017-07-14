@@ -1,7 +1,7 @@
 #' Gamma coefficient of two ordinal variables
 #'
 #' Calculates the Gamma coefficient as a measure of association between two ordinal variables.
-#' @param x is a matrix of counts,
+#' @param x is a matrix of counts.
 #' @return Gamma coefficient, standard error and p value.
 #' @author Marianne Mueller; original version Greg Rodd
 #' @references  Agresti, A. \emph{Categorical Data Analsysis}. John Wiley & Sons, 2013, pp. 57-59.
@@ -9,6 +9,10 @@
 #' @examples # Association between raw score and sex of patients
 #' score <- apply(amts[, 4:13], 1, sum, na.rm = TRUE)
 #' gamma_coef(table(score,amts$sex))
+#'
+#' # Association between raw score and indication group of patients
+#' score <- apply(desc2[, 5:14], 1, sum, na.rm = TRUE)
+#' gamma_coef(table(score,desc2$group))
 gamma_coef<-function(x){
   n <- nrow(x)
   m <- ncol(x)
@@ -39,7 +43,7 @@ gamma_coef<-function(x){
 #' @param freq a vector of counts.
 #' @param data data frame containing the factors x, y, z and the corresponding frequencies freq.
 #' @param conf.level confidence level for the returned confidence interval.
-#' @return matrix with estimates, standard errors and confidence interval limits
+#' @return matrix with estimates, standard errors and confidence interval limits.
 #' @export
 #' @author Marianne Mueller
 #' @references Davis, J. A. A Partial coefficient for Goodman and Kruskal's Gamma.

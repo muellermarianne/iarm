@@ -7,12 +7,13 @@
 out_infit(object, se = TRUE)
 }
 \arguments{
-\item{object}{an object of class "Rm" (output of RM or PCM)}
+\item{object}{an object of class "Rm", a fitted Rasch model oder partial
+credit model using  the functions RM or PCM in package eRm.}
 
 \item{se}{if TRUE the standard errors will be included.}
 }
 \value{
-an object of class outfit
+an object of class outfit containing:
 \item{outfit}{outfit statistics}
 \item{outfit.se}{standard errors of outfit statistics}
 \item{out.pvalue}{p values of outfit statistics}
@@ -25,12 +26,19 @@ To avoid bias observed item responses are compared to expected responses under
 the conditional distribution of responses given the total score. This leads to standardized  residuals
 which can be summarized to outfit and infit statistics in the usual way.
 }
+\details{
+The fit statistics and their standard errors are calculated as described in Christensen et al.
+P values are are based on the normal distribution of the standardized fit statistics.
+}
 \examples{
 rm.mod <- RM(amts[,4:13])
 out_infit(rm.mod)
 }
 \references{
-Kreiner, S. & Christensen, K. B. (2011) Exact evaluation of Bias in Rasch model residuals.
+Christensen, K. B. , Kreiner, S. & Mesbah, M. (Eds.)
+\emph{Rasch Models in Health}. Iste and Wiley (2013), pp. 86 - 90.
+
+ Kreiner, S. & Christensen, K. B. (2011) Exact evaluation of Bias in Rasch model residuals.
 \emph{Advances in Mathematics Research}, 12, 19-40.
 }
 \author{
