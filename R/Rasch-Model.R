@@ -37,8 +37,8 @@ item_target <- function(obj){
   var.X <- function(x) {
     function(theta) {
       xvec <- 0:length(x)
-      pp <- (exp(theta*xvec)*exp(-c(0, x)))/(exp(theta*xvec)%*%exp(-c(0, x)))
-      (xvec - pp%*%xvec)^2%*%pp
+      pp <- (exp(theta*xvec)*exp(-c(0, x)))/rep((exp(theta*xvec)%*%exp(-c(0, x))),length(xvec))
+      (xvec - rep(pp%*%xvec,length(xvec)))^2%*%pp
     }
   }
   varf <- lapply(betasum.l, var.X)
