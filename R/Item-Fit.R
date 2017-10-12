@@ -194,7 +194,170 @@ print.outfit <- function(x, ...){
   }
 }
 
+# #' Computes Outfit and Infit statistic for a bootstrap sample
+# #' Model fit with mRm or pcmodel (much faster then eRm)
+# #' @importFrom mRm mrm
+# #' @importFrom psychotools elementary_symmetric_functions
+# #' @importFrom psychotools threshpar
+# #' @param data dataframe with the responses to the items
+# #' @param model If model="RM" a Rasch model will be fitted,
+# #' if model="PCM" a partial credit model for polytomous items is used.
+# #' @return vector with Outfit and Infit
+outin_boot <- function(data, model= c("RM","PCM")){
+  rv <- rowSums(data, na.rm = TRUE)
+  k <- dim(data)[2]  # Anzahl Items
+  mode <- match.arg(model)
+  if (mode == "RM") {
+    koeff <- (-1)*mrm(data,1)$beta
+    mi <- rep(1,k)
+  }
+  else {
+    mi <- apply(data, 2, max, na.rm = TRUE)
+    thresh1 <- threshpar(pcmodel(data, hessian = F, nullcats="ignore"))
+    koeff <- lapply(thresh1, cumsum)
+  }
+  m <- sum(mi)
+  rvstrich <- rv[rv > 0 & rv < m]
+  ER <- matrix(rep(0, (m-1)*k), ncol = k)
+  VarZ <- matrix(rep(0, (m-1)*k), ncol = k)
+  VarX.R <- matrix(rep(0, (m-1)*k), ncol = k)
+  gr <- elementary_symmetric_functions(koeff)[[1]]
+  grminus <- vector("list",k)
+  for (i in 1:k) {
+    grminus[[i]] <- elementary_symmetric_functions(koeff[-i])[[1]]
+  }
+  for (r in 1:(m-1)) {
+    for (i in 1:k) {
+      pscore <- rep(0, mi[i])
+      for (x in 1:mi[i]) {
+        if (x <= r  & x >= r-m+mi[i]) {
+          pscore[x] <- exp(-koeff[[i]][x]) * (grminus[[i]])[r+1-x] / gr[r+1]
+        }
+      }
+      pscore <- c(1-sum(pscore), pscore)
+      ER[r,i] <- as.numeric((0:mi[i]) %*% pscore)
+      VarX.R[r,i] <- as.numeric(((0:mi[i])-ER[r,i]) ^ 2 %*% pscore)
+      VarZ[r,i] <- as.numeric((((0:mi[i]) - ER[r,i])^2/VarX.R[r, i] - 1)^2 %*% pscore)
+    }
+  }
+  Ehat <- ER[rvstrich,]
+  VarX <- VarX.R[rvstrich,]
+  Z.vi2 <- ((data[rv > 0 & rv < m,] - Ehat) ^ 2) / VarX
+  Outfit = colMeans(Z.vi2, na.rm=T)
+  nir <- apply(data[rv > 0 & rv < m, ],2, function(x){tapply(x,factor(rvstrich,levels=1:(m-1)),function(y){length(na.exclude(y))})})
+  nir[is.na(nir)] <- 0
+  Outfit.se <- sqrt(colSums((nir/colSums(nir)^2) * VarZ))
+  Wri <- VarX.R / matrix(rep(colSums(nir * VarX.R), m-1), ncol = k, byrow = T)
+  Wvi <- Wri[rvstrich, ]
+  Infit <-  colSums(Wvi * Z.vi2, na.rm = T)
+  Infit.se <- sqrt(colSums(nir * Wri^2 * VarZ,na.rm = T))
+  c((Outfit-1)/Outfit.se, (Infit-1)/Infit.se)
+}
 
+#' Computes bootstrapping p values for Outfit and Infit statistics
+#'@param object  an object of class "Rm" (output of RM or PCM)
+#'@param B number of replications
+#'@export
+#'@importFrom mRm mrm
+#'@importFrom psychotools threshpar
+#'@importFrom utils capture.output
+#'@return object of class bootfit with outfit and infit statistics and corresponding p values.
+boot_fit <- function(object,B){
+  Fr1 <- out_infit(object)
+  Fr0 <- c((Fr1$Outfit-1)/Fr1$Outfit.se, (Fr1$Infit-1)/Fr1$Infit.se)
+  k <- dim(object$X)[2]
+  if (object$model=="RM") {
+    koeff <- (-1)*coef(object)
+  } else {
+    koeff <- thresholds(object)[[3]][[1]][, -1] - mean(thresholds(object)[[3]][[1]][, 1])
+    koeff2 <- vector("list",k)
+    for (i in 1:k) koeff2[[i]] <- koeff[i,]
+  }
+  invisible(capture.output(persons <- PP_gpcm(object$X,t(koeff),slopes=rep(1,k),type="wle")[[1]][[1]][,1]))
+  outin <- matrix(rep(NA,2*k*B),ncol=2*k)
+  condp <- function(x,x0){
+    if (x0 <= 0) p <- sum(x <= x0)/sum(x <= 0)
+    else p <- sum(x >= x0)/sum(x >= 0)
+    return(p)
+  }
+  cat("\n Number of bootstrap samples:  ")
+  b <- 1
+  while (b < B+1){
+    if (object$model=="RM") {
+      xstar <- sim.rasch(persons,koeff)
+    } else {
+      xstar <- sim.poly(persons,koeff2)
+      mincat <- apply(xstar,2,min,na.rm = TRUE)
+      if (any(mincat > 0)) next
+    }
+    outin[b,] <- outin_boot(xstar, object$model)
+
+    if (object$model=="RM") {
+      if (b/50==trunc(b/50)) cat(b,", ",sep="")
+    } else {
+      if (b/10==trunc(b/10)) cat(b,", ",sep="")
+    }
+    b <- b+1
+  }
+  cat("\n \n")
+  pvalue <- apply(rbind(outin,Fr0),2,function(x){condp(x[-(B+1)],x[B+1])})
+  result <- cbind(Outfit=Fr1[[1]],pvalue=pvalue[1:k], Infit=Fr1[[4]],pvalue=pvalue[(k+1):(2*k)])
+  class(result) <- "bootfit"
+  result
+}
+
+#' Print method for output of boot_fit
+#' @param x object of class bootfit.
+#' @param ... arguments passed to other functions.
+#' @export
+print.bootfit <- function(x,...){
+  symp <- function(x){symnum(x,cutpoints=c(0,0.001,0.01,0.05,0.1,1),symbols=c("***   "," **  "," *   "," .   ","    "))}
+  tab2 <- noquote(cbind(Outfit=round(x[,1],digits=3), pvalue=round(x[,2],digits=3),sig=symp(x[,2]),
+                        Infit=round(x[,3],digits=3),pvalue=round(x[,4],digits=3) ,sig=symp(x[,4])))
+  cat("\n")
+  print(tab2)
+  cat("\n")
+
+}
+
+
+# Original version William Revelle
+sim.poly <- function (persons, thresh) {
+  if (length(persons) == 1) {
+    faehig <- rnorm(persons)
+    n <- persons
+  } else {
+    faehig <- persons
+    n <- length(persons)
+  }
+  mi <- sapply(thresh,length)
+  k <- length(mi)
+  mtvec <- sequence(mi)
+  aa <- t(as.data.frame(lapply(split(mtvec,rep(1:k,mi)),function(ii){c(ii,rep(NA,length.out=max(mi)-length(ii)))})))
+  aa <- cbind(rep(0,k),aa)
+
+  psi.l=lapply(thresh, function(x){(-1)*cumsum(x)})
+  bb=t(as.data.frame(lapply(psi.l,function(ii){c(ii,rep(NA,length.out=max(mi)-length(ii)))})))
+  bb=cbind(rep(0,k),bb)
+
+  pIRF <- function(theta, a, b){
+    wts <- exp(b + a*theta)
+    summe <- apply(wts, 1,sum,na.rm=TRUE)
+    prob <- sweep(wts,1,summe, FUN="/")
+    return(prob)
+  }
+
+  sim.data <- matrix(NA, nrow=n, ncol=k)
+
+  for(j in (1:n)) {
+    prob <- pIRF(faehig[j], aa, bb)
+    cumprob <- t(apply(prob, 1, cumsum))
+    jju <- runif(k)
+    sim.data[j,] <-  apply(jju > cumprob,1,sum,na.rm=T)
+  }
+  colnames(sim.data)=paste("I",1:k,sep="")
+  return(sim.data)
+}
 
 
 pscore_poly  <- function(i,x,r,coeff){

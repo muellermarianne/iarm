@@ -16,7 +16,8 @@ Item fit statistics are used to assess whether individual items fit the Rasch mo
 Outfit and infit  mean squares are well-known and much used statistics.
  They summarize standardized response residuals comparing observed responses to items
  to the expected responses.  To avoid bias expected responses are calculated under the
- conditional distribution of responses given the total score. The item restscore gamma coefficient
+ conditional distribution of responses given the total score. Parametric bootstrapping is used to assess
+ the significance of misfitting items. The item restscore gamma coefficient
  is used to assess differential item discrimination.
 }
 
