@@ -168,9 +168,9 @@ out_infit <- function(object,se=TRUE){
     names(Infit)=colnames(X)
     fit <- cbind(Infit,Infit.se)
     in.pwert <- pwert(fit)
-    result <- list(Outfit=Outfit, Outfit.se=Outfit.se, out.pvalue=out.pwert, Infit=Infit, Infit.se=Infit.se, in.pvalue=in.pwert)
+    result <- list(outfit=Outfit, outfit.se=Outfit.se, out.pvalue=out.pwert, infit=Infit, infit.se=Infit.se, in.pvalue=in.pwert)
   } else {
-    result <- list(Outfit=Outfit, Infit=Infit)
+    result <- list(outfit=Outfit, infit=Infit)
   }
   class(result) <- "outfit"
   result
@@ -276,20 +276,20 @@ boot_fit <- function(object,B){
   invisible(capture.output(persons <- PP_gpcm(object$X,t(koeff),slopes=rep(1,k),type="wle")[[1]][[1]][,1]))
   outin <- matrix(rep(NA,2*k*B),ncol=2*k)
   condp <- function(x,x0){
-     if (x0 <= 0) p <- sum(x <= x0)/sum(x <= 0)
-     else p <- sum(x >= x0)/sum(x >= 0)
-     return(p)
+    if (x0 <= 0) p <- sum(x <= x0)/sum(x <= 0)
+    else p <- sum(x >= x0)/sum(x >= 0)
+    return(p)
   }
   cat("\n Number of bootstrap samples:  ")
   b <- 1
   while (b < B+1){
-     if (object$model=="RM") {
-        xstar <- sim.rasch(persons,koeff)
-      } else {
-        xstar <- sim.poly(persons,koeff2)
-        mincat <- apply(xstar,2,min,na.rm = TRUE)
-        if (any(mincat > 0)) next
-      }
+    if (object$model=="RM") {
+      xstar <- sim.rasch(persons,koeff)
+    } else {
+      xstar <- sim.poly(persons,koeff2)
+      mincat <- apply(xstar,2,min,na.rm = TRUE)
+      if (any(mincat > 0)) next
+    }
     outin[b,] <- outin_boot(xstar, object$model)
 
     if (object$model=="RM") {
