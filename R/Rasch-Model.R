@@ -22,18 +22,25 @@ W_thresh <- function(x){
 #' The item target is the value of the person parameter where
 #' item information is maximized.
 #' @param  obj object of class "eRm" (but not "dRm"), a fitted partial
-#' credit model using  the function PCM in package eRm.
+#' credit model using  the function PCM in package eRm or of class "pcmodel"
+#' (from package psychotools).
 #' @return vector with item targets.
 #' @author Marianne Mueller
 #' @import eRm
+#' @importFrom psychotools pcmodel
 #' @export
 #' @examples
 #'  pc.mod <- PCM(desc2[, 5:14])
 #'  item_target(pc.mod)
 item_target <- function(obj){
-  if(obj$model == "RM") stop("Item targets are computed only for polytomous models!")
-  thresh1 <- thresholds(obj)[[3]][[1]][, -1] - mean(thresholds(obj)[[3]][[1]][, 1])
-  betasum.l <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
+  if(class(obj)[1]=="pcmodel") obj$model <- "pcmodel"
+  if(!(obj$model%in%c("pcmodel","PCM"))) stop("Item targets are computed only for polytomous models estimated with pcmodel or PCM")
+  if(obj$model=="pcmodel")
+    betasum.l <- lapply(threshpar(pc.mod), cumsum)
+  else {
+    thresh1 <- thresholds(obj)[[3]][[1]][, -1] - mean(thresholds(obj)[[3]][[1]][, 1])
+    betasum.l <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
+  }
   var.X <- function(x) {
     function(theta) {
       xvec <- 0:length(x)
@@ -67,35 +74,52 @@ item_target <- function(obj){
 #' @export
 #' @examples #CLR overall test and test of  no DIF for agegrp and sex
 #' clr_tests(amts[,4:13],amts[,2:3])
-clr_tests <- function(dat.items, dat.exo, model = c("RM","PCM")) {
+clr_tests <- function(dat.items, dat.exo=NULL, model = c("RM","PCM")) {
   ok <- complete.cases(dat.items)
   dat.i <- dat.items[ok, ]
   sgrp <- score_groups(dat.i)
-  dat.exo <- data.frame(dat.exo)
-  ok1 <- complete.cases(cbind(dat.items, dat.exo))
   model <- match.arg(model)
   if (model == "RM") {
-    clr0 <- -2*(RM(dat.i)$loglik - (RM(dat.i[sgrp==1, ])$loglik + RM(dat.i[sgrp==2, ])$loglik))
-    clrhomo <- function(exo, data){
-      sum(sapply(split(data, exo, drop = TRUE), function(x){RM(x)$loglik}))
+    mod0 <- RM(dat.i)
+    lr0 <- LRtest(mod0,sgrp)
+    if (is.null(dat.exo)){
+      mm <- round(t(c(clr=lr0$LR,df=lr0$df,pvalue=lr0$pvalue)),digits=3)
+      row.names(mm)[1]="overall"
+    } else {
+      #dat.exo <- data.frame(dat.exo)
+      ok1 <-  complete.cases(cbind(dat.items, dat.exo))
+      mod1 <- RM(dat.items[ok1,])
+      lrexo <- function(x){
+        lr <- LRtest(mod1,x)
+        out <- c(lr$LR,lr$df,lr$pvalue)
+      }
+      mm <- round(rbind(c(clr=lr0$LR,df=lr0$df,pvalue=lr0$pvalue),t(apply(dat.exo[ok1,,drop=F],2,lrexo))),digits=3)
+      row.names(mm) <- c("overall", names(dat.exo[ok1, , drop = F]))
     }
-    ll <- RM(dat.items[ok1, ])$loglik
-    m <- dim(dat.i)[2]
+    symp <- symnum(mm[,3], cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),symbols = c(" ***", " **", " *", " .", " "))
+    mm<- noquote(cbind(mm,sig=symp))
   } else {
-    clr0 <- -2*(pcmodel(dat.i,hessian=F)$loglik - (pcmodel(dat.i[sgrp==1, ],hessian=F)$loglik + pcmodel(dat.i[sgrp==2, ],hessian=F)$loglik))
-    clrhomo <- function(exo, data){
-      sum(sapply(split(data, exo, drop = TRUE),function(x){pcmodel(x,hessian=F)$loglik}))
+    mod0 <- psychotools::pcmodel(dat.i,hessian=F)
+    clr0 <- -2*(mod0$loglik - (psychotools::pcmodel(dat.i[sgrp==1, ],hessian=F)$loglik + psychotools::pcmodel(dat.i[sgrp==2, ],hessian=F)$loglik))
+    if (is.null(dat.exo)){
+      mm <- round(t(c(clr=clr0,df=mod0$df)),digits=3)
+      row.names(mm)[1]="overall"
+    } else {
+      ok1 <-  complete.cases(cbind(dat.items, dat.exo))
+      clrhomo <- function(exo, data){
+        sum(sapply(split(data, exo, drop = TRUE),function(x){psychotools::pcmodel(x,hessian=F)$loglik}))
+      }
+      mod1 <- psychotools::pcmodel(dat.items[ok1, ],hessian=F)
+      ll <- mod1$loglik
+      clr <- c(clr0, -2*(ll - apply(dat.exo[ok1, ,drop = F],2,clrhomo, dat.items[ok1, ])))
+      df <- c(mod0$df,mod1$df*(sapply(dat.exo[ok1, , drop = F],nlevels) - 1))
+      mm <- cbind(clr, df)
+      row.names(mm) <- c("overall", names(dat.exo[ok1, , drop = F]))
     }
-    ll <- pcmodel(dat.items[ok1, ],hessian=F)$loglik
-    m <- sum(apply(dat.items[ok1, ], 2, max, na.rm = TRUE))
+    pvalue <- apply(mm,1,function(x){1-pchisq(x[1],x[2])})
+    symp <- symnum(pvalue, cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),symbols = c(" ***", " **", " *", " .", " "))
+    mm <- noquote(cbind(clr = format(mm[, 1], digits = 3), df = format(mm[, 2], digits = 1), pvalue = format(pvalue, digits = 2), sig = symp))
   }
-  clr <- c(clr0, -2*(ll - apply(dat.exo[ok1, ,drop=F],2,clrhomo, dat.items[ok1, ])))
-  df <- (m-1)* (c(1, sapply(dat.exo[ok1, ,drop=F],function(x){sum(table(x) != 0)}) - 1))
-  mm <- cbind(clr, df)
-  row.names(mm) <- c("overall", names(dat.exo[ok1, ,drop=F]))
-  pvalue <- apply(mm,1,function(x){1-pchisq(x[1],x[2])})
-  symp <- symnum(pvalue, cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),symbols = c(" ***", " **", " *", " .", " "))
-  mm <- noquote(cbind(clr = format(mm[, 1], digits = 3), df = format(mm[, 2], digits = 1), pvalue = format(pvalue, digits = 2), sig = symp))
   cat("\n")
   cat("Conditional Likelihood Ratio Tests:")
   cat("\n")

@@ -39,10 +39,11 @@ expvar <- function(data, coeff){
 #' together with standardized residuals. If the Andersen's CLR test has shown some evidence against homogeneity,
 #' this comparison can indicate which items might be responsable.
 #' @param  object object of class "Rm", a fitted Rasch model oder partial
-#' credit model using  the functions RM or PCM in package eRm.
+#' credit model using  the functions RM or PCM in package eRm or an object of class "pcmodel",
+#'  a fitted partial credit model using the function pcmodel in package psychotools.
 #' @return list with observed and expected mean scores together with standardized residuals for the two score groups.
 #' @author Marianne Mueller
-#' @importFrom psychotools elementary_symmetric_functions
+#' @import psychotools
 #' @export
 #' @examples
 #' rm.mod <- RM(amts[,4:13])
@@ -51,23 +52,35 @@ expvar <- function(data, coeff){
 #' pc.mod <- PCM(desc2[,5:14])
 #' item_obsexp(pc.mod)
 item_obsexp <- function(object){
-  if (!("Rm"%in%class(object))) stop("object must be of class Rm!")
-  k <- dim(object$X)[2]
+  if (!any("Rm"%in%class(object),class(object) =="pcmodel")) stop("object must be of class Rm or pcmodel!")
+  if(class(object)[1]=="pcmodel") object$model <- "pcmodel"
   if (object$model == "RM") {
+    X <- object$X
+    k <- dim(X)[2]
     coeff <- (-1)*coef(object)
     mi <- rep(1, k)
   } else {
-    mi <- apply(object$X, 2, max, na.rm = TRUE)
-    thresh1 <- thresholds(object)[[3]][[1]][, -1] - mean(thresholds(object)[[3]][[1]][, 1])
-    coeff <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
+    if (object$model == "PCM"){
+      X <- object$X
+      k <- dim(X)[2]
+      mi <- apply(X, 2, max, na.rm = TRUE)
+      thresh1 <- thresholds(object)[[3]][[1]][, -1] - mean(thresholds(object)[[3]][[1]][, 1])
+      coeff <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
+    } else {
+      X <- object$data
+      k <- dim(X)[2]
+      mi <- apply(X, 2, max, na.rm = TRUE)
+      thresh1 <- coef(threshpar(pc.mod),type="matrix")
+      coeff <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
+    }
   }
   m <- sum(mi)
-  score <- apply(object$X, 1, sum, na.rm=T)
-  sgrp <- score_groups(object$X)
+  score <- apply(X, 1, sum, na.rm=T)
+  sgrp <- score_groups(X)
   resgrp <- function(x){
-    EV <- expvar(object$X[sgrp==x & score > 0 & score < m, ], coeff)
-    resm <- cbind(apply(object$X[sgrp==x & score > 0 & score < m, ], 2, mean, na.rm=T), colMeans(EV$Ehat, na.rm=T),
-                  length(EV$VarX[!is.na(EV$VarX[, 1]), 1]) * (apply(object$X[sgrp==x & score > 0 & score < m, ], 2, mean, na.rm=T)
+    EV <- expvar(X[sgrp==x & score > 0 & score < m, ], coeff)
+    resm <- cbind(apply(X[sgrp==x & score > 0 & score < m, ], 2, mean, na.rm=T), colMeans(EV$Ehat, na.rm=T),
+                  length(EV$VarX[!is.na(EV$VarX[, 1]), 1]) * (apply(X[sgrp==x & score > 0 & score < m, ], 2, mean, na.rm=T)
                                                               - colMeans(EV$Ehat, na.rm=T))/sqrt(colSums(EV$VarX, na.rm = T)))
     colnames(resm)= c("mean obs", "mean exp", "std.res")
     symp <- symnum(resm[, 3], cutpoints=c(-100, -3, -2, 2, 3, 100), symbols=c("--", "-", " ", "+", "++"))
@@ -91,7 +104,8 @@ item_obsexp <- function(object){
 #' the conditional distribution of responses given the total score. This leads to standardized  residuals
 #' which can be summarized to outfit and infit statistics in the usual way.
 #' @param  object an object of class "Rm", a fitted Rasch model oder partial
-#' credit model using  the functions RM or PCM in package eRm.
+#' credit model using  the functions RM or PCM in package eRm or an object of class "pcmodel",
+#' a fitted partial credit model using the function pcmodel in package psychotools.
 #' @param se if TRUE the standard errors will be included.
 #' @details The fit statistics and their standard errors are calculated as described in Christensen et al.
 #' P values are are based on the normal distribution of the standardized fit statistics.
@@ -113,16 +127,30 @@ item_obsexp <- function(object){
 #' rm.mod <- RM(amts[,4:13])
 #' out_infit(rm.mod)
 out_infit <- function(object,se=TRUE){
-  if (!("Rm"%in%class(object))) stop("object must be of class Rm!")
-  rv <- rowSums(object$X, na.rm = TRUE)
-  k <- dim(object$X)[2]
+  if (!any("Rm"%in%class(object),class(object) =="pcmodel")) stop("object must be of class Rm or pcmodel!")
+  if(class(object)[1]=="pcmodel") object$model <- "pcmodel"
   if (object$model=="RM") {
+    X <- object$X
+    rv <- rowSums(X, na.rm = TRUE)
+    k <- dim(X)[2]
     koeff <- (-1)*coef(object)
     mi <- rep(1,k)
   } else {
-    mi <- apply(object$X, 2, max, na.rm = TRUE)
-    thresh1 <- thresholds(object)[[3]][[1]][, -1] - mean(thresholds(object)[[3]][[1]][, 1])
-    koeff <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
+    if (object$model == "PCM") {
+      X <- object$X
+      rv <- rowSums(X, na.rm = TRUE)
+      k <- dim(X)[2]
+      mi <- apply(X, 2, max, na.rm = TRUE)
+      thresh1 <- thresholds(object)[[3]][[1]][, -1] - mean(thresholds(object)[[3]][[1]][, 1])
+      koeff <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
+    } else {
+      X <- object$data
+      rv <- rowSums(X, na.rm = TRUE)
+      k <- dim(X)[2]
+      mi <- apply(X, 2, max, na.rm = TRUE)
+      thresh1 <- coef(threshpar(pc.mod),type="matrix")
+      koeff <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
+    }
   }
   m <- sum(mi)
   rvstrich <- rv[rv > 0 & rv < m]
@@ -150,9 +178,9 @@ out_infit <- function(object,se=TRUE){
   }
   Ehat <- ER[rvstrich,]
   VarX <- VarX.R[rvstrich,]
-  Z.vi2 <- ((object$X[rv > 0 & rv < m,] - Ehat) ^ 2) / VarX
+  Z.vi2 <- ((X[rv > 0 & rv < m,] - Ehat) ^ 2) / VarX
   Outfit = colMeans(Z.vi2, na.rm=T)
-  X <- as.data.frame(object$X)
+  X <- as.data.frame(X)
   nir <- t(sapply(split(X[rv > 0 & rv < m, ], factor(rvstrich, levels = 1:(m-1))),function(x){apply(x, 2, function(y){length(na.exclude(y))})}))
   if (se==TRUE) {
     Outfit.se <- sqrt(colSums((nir/colSums(nir)^2) * VarZ))
@@ -201,9 +229,9 @@ print.outfit <- function(x, ...){
 # #' @importFrom psychotools threshpar
 # #' @param data dataframe with the responses to the items
 # #' @param model If model="RM" a Rasch model will be fitted,
-# #' if model="PCM" a partial credit model for polytomous items is used.
+# #' if model="PCM" or "pcmodel" a partial credit model for polytomous items is used.
 # #' @return vector with Outfit and Infit
-outin_boot <- function(data, model= c("RM","PCM")){
+outin_boot <- function(data, model= c("RM","PCM","pcmodel")){
   rv <- rowSums(data, na.rm = TRUE)
   k <- dim(data)[2]  # Anzahl Items
   mode <- match.arg(model)
@@ -255,7 +283,7 @@ outin_boot <- function(data, model= c("RM","PCM")){
 }
 
 #' Computes bootstrapping p values for Outfit and Infit statistics
-#'@param object  an object of class "Rm" (output of RM or PCM)
+#'@param object  an object of class "Rm" (output of RM or PCM) or class "pcmodel"
 #'@param B number of replications
 #'@export
 #'@importFrom mRm mrm
@@ -265,15 +293,26 @@ outin_boot <- function(data, model= c("RM","PCM")){
 boot_fit <- function(object,B){
   Fr1 <- out_infit(object)
   Fr0 <- c((Fr1$Outfit-1)/Fr1$Outfit.se, (Fr1$Infit-1)/Fr1$Infit.se)
-  k <- dim(object$X)[2]
+  if(class(object)[1]=="pcmodel") object$model <- "pcmodel"
   if (object$model=="RM") {
+    X <- object$X
+    k <- dim(X)[2]
     koeff <- (-1)*coef(object)
   } else {
-    koeff <- thresholds(object)[[3]][[1]][, -1] - mean(thresholds(object)[[3]][[1]][, 1])
-    koeff2 <- vector("list",k)
-    for (i in 1:k) koeff2[[i]] <- koeff[i,]
+    if (object$model == "PCM") {
+      X <- object$X
+      k <- dim(X)[2]
+      koeff <- thresholds(object)[[3]][[1]][, -1] - mean(thresholds(object)[[3]][[1]][, 1])
+      koeff2 <- vector("list",k)
+      for (i in 1:k) koeff2[[i]] <- koeff[i,]
+    } else {
+      X <- object$data
+      k <- dim(X)[2]
+      koeff <-  coef(threshpar(object),type="matrix")
+      koeff2 <- threshpar(object)
+    }
   }
-  invisible(capture.output(persons <- PP_gpcm(object$X,t(koeff),slopes=rep(1,k),type="wle")[[1]][[1]][,1]))
+  invisible(capture.output(persons <- PP_gpcm(X,t(koeff),slopes=rep(1,k),type="wle")[[1]][[1]][,1]))
   outin <- matrix(rep(NA,2*k*B),ncol=2*k)
   condp <- function(x,x0){
     if (x0 <= 0) p <- sum(x <= x0)/sum(x <= 0)
@@ -378,7 +417,7 @@ pscore_poly  <- function(i,x,r,coeff){
 #' The observed Gamma coefficient between the score of a single item and the total score of the remaining items
 #' is compared with the corresponding expected Gamma coefficient under the Rasch model.
 #' @param object an object of class "Rm", a fitted Rasch model oder partial
-#' credit model using  the functions RM or PCM in package eRm.
+#' credit model using  the functions RM or PCM in package eRm, or of class "pcmodel".
 #' @export
 #' @return a matrix containing:
 #' \item{observed}{observed gamma coefficients}
@@ -393,21 +432,35 @@ pscore_poly  <- function(i,x,r,coeff){
 #' rm.mod <- RM(amts[,4:13])
 #' item_restscore(rm.mod)
 item_restscore <- function(object){
-  if (!("Rm"%in%class(object))) stop("object must be of class Rm!")
-  k <- dim(object$X)[2]
-  n <- dim(object$X)[1]
+  if (!any("Rm"%in%class(object),class(object) =="pcmodel")) stop("object must be of class Rm or pcmodel!")
+  if(class(object)[1]=="pcmodel") object$model <- "pcmodel"
   if (object$model=="RM") {
+    X <- object$X
+    k <- dim(X)[2]
+    n <- dim(X)[1]
     coeff <- (-1)*coef(object)
     mi <- rep(1,k)
   } else {
-    mi <- apply(object$X, 2, max, na.rm = TRUE)
-    thresh1 <- thresholds(object)[[3]][[1]][, -1] - mean(thresholds(object)[[3]][[1]][, 1])
-    coeff <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
+    if (object$model=="PCM") {
+      X <- object$X
+      k <- dim(X)[2]
+      n <- dim(X)[1]
+      mi <- apply(X, 2, max, na.rm = TRUE)
+      thresh1 <- thresholds(object)[[3]][[1]][, -1] - mean(thresholds(object)[[3]][[1]][, 1])
+      coeff <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
+    } else {
+      X <- object$data
+      k <- dim(X)[2]
+      n <- dim(X)[1]
+      mi <- apply(X, 2, max, na.rm = TRUE)
+      thresh1 <- coef(threshpar(pc.mod),type="matrix")
+      coeff <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
+    }
   }
   m <- sum(mi)
-  score <- apply(object$X,1,sum,na.rm=T)
-  restscore <- matrix(rep(score,k),ncol=k)- object$X
-  mm <- t(apply(rbind(object$X,restscore),2,function(x){gamma_coef(table(x[1:n],x[(n+1):(2*n)]))[1:2]}))
+  score <- apply(X,1,sum,na.rm=T)
+  restscore <- matrix(rep(score,k),ncol=k)- X
+  mm <- t(apply(rbind(X,restscore),2,function(x){gamma_coef(table(x[1:n],x[(n+1):(2*n)]))[1:2]}))
   #! beob gammas.se sind nicht gleich wie Svend's
   # erwartete gammas
   rvneu <- factor(score,levels = 0:m)
