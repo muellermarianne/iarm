@@ -1,14 +1,3 @@
-#' Construction of design matrix for partial credit model
-#'
-#' Construction of design matrix for partial credit model  with
-#' the usual parameter restriction.
-#'
-#' @param x vector of length equal to the number of items. The elements of x are the maximal response categories for the items.
-#' @return design matrix W for PCM.
-#' @export
-#' @examples
-#' # desc2 contains 10 items with response categories from 0 to 4 each.
-#' W_thresh(rep(4,10))
 W_thresh <- function(x){
   mi <- x
   W1 <- diag(sum(mi)-1)
@@ -21,13 +10,13 @@ W_thresh <- function(x){
 #'
 #' The item target is the value of the person parameter where
 #' item information is maximized.
-#' @param  obj object of class "eRm" (but not "dRm"), a fitted partial
+#' @param  obj An object of class "eRm" (but not "dRm"), a fitted partial
 #' credit model using  the function PCM in package eRm or of class "pcmodel"
 #' (from package psychotools).
 #' @return vector with item targets.
 #' @author Marianne Mueller
 #' @import eRm
-#' @importFrom psychotools pcmodel
+#' @importFrom psychotools pcmodel threshpar
 #' @export
 #' @examples
 #'  pc.mod <- PCM(desc2[, 5:14])
@@ -36,7 +25,7 @@ item_target <- function(obj){
   if(class(obj)[1]=="pcmodel") obj$model <- "pcmodel"
   if(!(obj$model%in%c("pcmodel","PCM"))) stop("Item targets are computed only for polytomous models estimated with pcmodel or PCM")
   if(obj$model=="pcmodel")
-    betasum.l <- lapply(threshpar(pc.mod), cumsum)
+    betasum.l <- lapply(threshpar(obj), cumsum)
   else {
     thresh1 <- thresholds(obj)[[3]][[1]][, -1] - mean(thresholds(obj)[[3]][[1]][, 1])
     betasum.l <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
@@ -64,12 +53,13 @@ item_target <- function(obj){
 #' for tests of no differential item functioning (DIF).
 #' @author Marianne Mueller
 #' @references Andersen, E.B. (1973). A goodness of fit test for the Rasch model. \emph{Psychometrika}, 38, 123-140.
-#' @param dat.items data frame with the responses to the items.
-#' @param dat.exo  data frame consisting of exogenuous factor variables.
+#' @param dat.items A data frame with the responses to the items.
+#' @param dat.exo  A data frame consisting of exogenuous factor variables.
 #' @param model If model="RM" a Rasch model will be fitted,
 #' if model="PCM" a partial credit model for polytomous items is used.
 #' @return matrix with test statistics, df and p values.
-#' @import stats
+#' @import eRm
+#' @importFrom stats symnum
 #' @importFrom psychotools pcmodel
 #' @export
 #' @examples #CLR overall test and test of  no DIF for agegrp and sex
@@ -99,17 +89,17 @@ clr_tests <- function(dat.items, dat.exo=NULL, model = c("RM","PCM")) {
     symp <- symnum(mm[,3], cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),symbols = c(" ***", " **", " *", " .", " "))
     mm<- noquote(cbind(mm,sig=symp))
   } else {
-    mod0 <- psychotools::pcmodel(dat.i,hessian=F)
-    clr0 <- -2*(mod0$loglik - (psychotools::pcmodel(dat.i[sgrp==1, ],hessian=F)$loglik + psychotools::pcmodel(dat.i[sgrp==2, ],hessian=F)$loglik))
+    mod0 <- pcmodel(dat.i,hessian=F)
+    clr0 <- -2*(mod0$loglik - (pcmodel(dat.i[sgrp==1, ],hessian=F)$loglik + pcmodel(dat.i[sgrp==2, ],hessian=F)$loglik))
     if (is.null(dat.exo)){
       mm <- round(t(c(clr=clr0,df=mod0$df)),digits=3)
       row.names(mm)[1]="overall"
     } else {
       ok1 <-  complete.cases(cbind(dat.items, dat.exo))
       clrhomo <- function(exo, data){
-        sum(sapply(split(data, exo, drop = TRUE),function(x){psychotools::pcmodel(x,hessian=F)$loglik}))
+        sum(sapply(split(data, exo, drop = TRUE),function(x){pcmodel(x,hessian=F)$loglik}))
       }
-      mod1 <- psychotools::pcmodel(dat.items[ok1, ],hessian=F)
+      mod1 <- pcmodel(dat.items[ok1, ],hessian=F)
       ll <- mod1$loglik
       clr <- c(clr0, -2*(ll - apply(dat.exo[ok1, ,drop = F],2,clrhomo, dat.items[ok1, ])))
       df <- c(mod0$df,mod1$df*(sapply(dat.exo[ok1, , drop = F],nlevels) - 1))

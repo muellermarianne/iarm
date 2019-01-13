@@ -7,9 +7,9 @@
 boot_fit(object, B)
 }
 \arguments{
-\item{object}{an object of class "Rm" (output of RM or PCM)}
+\item{object}{an object of class "Rm" (output of RM or PCM) or class "pcmodel"}
 
-\item{B}{number of replications}
+\item{B}{Number of replications.}
 }
 \value{
 object of class bootfit with outfit and infit statistics and corresponding p values.

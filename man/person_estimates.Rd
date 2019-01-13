@@ -7,10 +7,11 @@
 person_estimates(object, properties = F)
 }
 \arguments{
-\item{object}{object of class eRm, a fitted Rasch model oder partial
-credit model using  the functions RM or PCM in package eRm.}
+\item{object}{An object of class "Rm", a fitted Rasch model or partial
+credit model using  the functions RM or PCM in package eRm, or an object of class "pcmodel",
+ a fitted partial credit model using the function pcmodel in package psychotools.}
 
-\item{properties}{if TRUE additional properties of the estimates are given (see below).}
+\item{properties}{If TRUE additional properties of the estimates are given (see below).}
 }
 \value{
 If properties = False a matrix containing:

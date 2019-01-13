@@ -1,33 +1,33 @@
 expvar <- function(data, coeff){
   rv <- rowSums(data, na.rm = TRUE)
-  rv[rv==0] <- NA
+  rv[rv == 0] <- NA
   k <- dim(data)[2]
   n <- dim(data)[1]
   mi <- sapply(coeff, length)
   m <- sum(mi)
-  Er <- matrix(rep(0, m*k), ncol=k)
-  Varx <- matrix(rep(0, m*k), ncol=k)
+  Er <- matrix(rep(0, m*k), ncol = k)
+  Varx <- matrix(rep(0, m*k), ncol = k)
   gr <- psychotools::elementary_symmetric_functions(coeff)[[1]]
-  grminus <- vector("list",k)
+  grminus <- vector("list", k)
   for (i in 1:k) {
     grminus[[i]] <- psychotools::elementary_symmetric_functions(coeff[-i])[[1]]
   }
   for (r in 1:(m-1)) {
     for (i in 1:k) {
-      pscore <- rep(0,mi[i])
+      pscore <- rep(0, mi[i])
       for (x in 1:mi[i]) {
-        if (x <= r & m-mi[i]+x >= r) {
-          pscore[x] <- exp(-coeff[[i]][x])*(grminus[[i]])[r+1-x]/gr[r+1]
-          }
+        if (x <= r & m - mi[i] + x >= r) {
+          pscore[x] <- exp(-coeff[[i]][x])*(grminus[[i]])[r + 1 - x]/gr[r + 1]
+        }
       }
-      pscore <- c(1-sum(pscore), pscore)
-      Er[r,i] <- (0:mi[i])%*%pscore
-      Varx[r,i] <- ((0:mi[i])-Er[r,i])^2%*%pscore
+      pscore <- c(1 - sum(pscore), pscore)
+      Er[r, i] <- (0:mi[i])%*%pscore
+      Varx[r, i] <- ((0:mi[i])-Er[r, i])^2%*%pscore
     }
   }
-  Er[m,] <- 1
-  Ehat <- Er[rv,]
-  VarX <- Varx[rv,]
+  Er[m, ] <- 1
+  Ehat <- Er[rv, ]
+  VarX <- Varx[rv, ]
   colnames(Ehat) <- paste("Item", 1:k, sep="")
   colnames(VarX) <- paste("Item", 1:k, sep="")
   list(Ehat=Ehat, VarX=VarX)
@@ -38,17 +38,18 @@ expvar <- function(data, coeff){
 #' Homogeneity of item responses in the low and high score groups is analyzed by looking at observed and expected item mean scores
 #' together with standardized residuals. If the Andersen's CLR test has shown some evidence against homogeneity,
 #' this comparison can indicate which items might be responsable.
-#' @param  object object of class "Rm", a fitted Rasch model oder partial
-#' credit model using  the functions RM or PCM in package eRm or an object of class "pcmodel",
+#' @param  object An object of class "Rm", a fitted Rasch model or partial
+#' credit model using  the functions RM or PCM in package eRm, or an object of class "pcmodel",
 #'  a fitted partial credit model using the function pcmodel in package psychotools.
 #' @return list with observed and expected mean scores together with standardized residuals for the two score groups.
 #' @author Marianne Mueller
-#' @import psychotools
+#' @import eRm
+#' @importFrom psychotools pcmodel threshpar
+#' @importFrom stats symnum
 #' @export
 #' @examples
 #' rm.mod <- RM(amts[,4:13])
 #' item_obsexp(rm.mod)
-#'
 #' pc.mod <- PCM(desc2[,5:14])
 #' item_obsexp(pc.mod)
 item_obsexp <- function(object){
@@ -70,7 +71,7 @@ item_obsexp <- function(object){
       X <- object$data
       k <- dim(X)[2]
       mi <- apply(X, 2, max, na.rm = TRUE)
-      thresh1 <- coef(threshpar(pc.mod),type="matrix")
+      thresh1 <- coef(threshpar(object),type="matrix")
       coeff <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
     }
   }
@@ -103,13 +104,15 @@ item_obsexp <- function(object){
 #' To avoid bias observed item responses are compared to expected responses under
 #' the conditional distribution of responses given the total score. This leads to standardized  residuals
 #' which can be summarized to outfit and infit statistics in the usual way.
-#' @param  object an object of class "Rm", a fitted Rasch model oder partial
-#' credit model using  the functions RM or PCM in package eRm or an object of class "pcmodel",
-#' a fitted partial credit model using the function pcmodel in package psychotools.
-#' @param se if TRUE the standard errors will be included.
+#' @param  object An object of class "Rm", a fitted Rasch model or partial
+#' credit model using  the functions RM or PCM in package eRm, or an object of class "pcmodel",
+#'  a fitted partial credit model using the function pcmodel in package psychotools.
+#' @param se If TRUE the standard errors will be included.
 #' @details The fit statistics and their standard errors are calculated as described in Christensen et al.
 #' P values are are based on the normal distribution of the standardized fit statistics.
 #' @author Marianne Mueller
+#' @import eRm
+#' @importFrom psychotools pcmodel threshpar
 #' @export
 #' @references Christensen, K. B. , Kreiner, S. & Mesbah, M. (Eds.)
 #' \emph{Rasch Models in Health}. Iste and Wiley (2013), pp. 86 - 90.
@@ -148,7 +151,7 @@ out_infit <- function(object,se=TRUE){
       rv <- rowSums(X, na.rm = TRUE)
       k <- dim(X)[2]
       mi <- apply(X, 2, max, na.rm = TRUE)
-      thresh1 <- coef(threshpar(pc.mod),type="matrix")
+      thresh1 <- coef(threshpar(object),type="matrix")
       koeff <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
     }
   }
@@ -196,9 +199,9 @@ out_infit <- function(object,se=TRUE){
     names(Infit)=colnames(X)
     fit <- cbind(Infit,Infit.se)
     in.pwert <- pwert(fit)
-    result <- list(outfit=Outfit, outfit.se=Outfit.se, out.pvalue=out.pwert, infit=Infit, infit.se=Infit.se, in.pvalue=in.pwert)
+    result <- list(Outfit=Outfit, Outfit.se=Outfit.se, out.pvalue=out.pwert, Infit=Infit, Infit.se=Infit.se, in.pvalue=in.pwert)
   } else {
-    result <- list(outfit=Outfit, infit=Infit)
+    result <- list(Outfit=Outfit, Infit=Infit)
   }
   class(result) <- "outfit"
   result
@@ -227,7 +230,7 @@ print.outfit <- function(x, ...){
 # #' @importFrom mRm mrm
 # #' @importFrom psychotools elementary_symmetric_functions
 # #' @importFrom psychotools threshpar
-# #' @param data dataframe with the responses to the items
+# #' @param data A dataframe with the responses to the items
 # #' @param model If model="RM" a Rasch model will be fitted,
 # #' if model="PCM" or "pcmodel" a partial credit model for polytomous items is used.
 # #' @return vector with Outfit and Infit
@@ -284,8 +287,9 @@ outin_boot <- function(data, model= c("RM","PCM","pcmodel")){
 
 #' Computes bootstrapping p values for Outfit and Infit statistics
 #'@param object  an object of class "Rm" (output of RM or PCM) or class "pcmodel"
-#'@param B number of replications
+#'@param B Number of replications.
 #'@export
+#'@import eRm
 #'@importFrom mRm mrm
 #'@importFrom psychotools threshpar
 #'@importFrom utils capture.output
@@ -416,8 +420,10 @@ pscore_poly  <- function(i,x,r,coeff){
 #'
 #' The observed Gamma coefficient between the score of a single item and the total score of the remaining items
 #' is compared with the corresponding expected Gamma coefficient under the Rasch model.
-#' @param object an object of class "Rm", a fitted Rasch model oder partial
-#' credit model using  the functions RM or PCM in package eRm, or of class "pcmodel".
+#' @param object An object of class "Rm", a fitted Rasch model or partial
+#' credit model using  the functions RM or PCM in package eRm, or an object of class "pcmodel",
+#'  a fitted partial credit model using the function pcmodel in package psychotools.
+#' @import eRm
 #' @export
 #' @return a matrix containing:
 #' \item{observed}{observed gamma coefficients}
@@ -453,7 +459,7 @@ item_restscore <- function(object){
       k <- dim(X)[2]
       n <- dim(X)[1]
       mi <- apply(X, 2, max, na.rm = TRUE)
-      thresh1 <- coef(threshpar(pc.mod),type="matrix")
+      thresh1 <- coef(threshpar(object),type="matrix")
       coeff <- lapply(as.list(as.data.frame(t(thresh1))), cumsum)
     }
   }

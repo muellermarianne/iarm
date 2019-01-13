@@ -7,17 +7,17 @@
 partgam(x, y, z, freq, data, conf.level = 0.95)
 }
 \arguments{
-\item{x}{factor}
+\item{x}{A factor.}
 
-\item{y}{factor}
+\item{y}{A factor.}
 
-\item{z}{factor}
+\item{z}{A factor.}
 
-\item{freq}{a vector of counts.}
+\item{freq}{A vector of counts.}
 
-\item{data}{data frame containing the factors x, y, z and the corresponding frequencies freq.}
+\item{data}{Data frame containing the factors x, y, z and the corresponding frequencies freq.}
 
-\item{conf.level}{confidence level for the returned confidence interval.}
+\item{conf.level}{Confidence level for the returned confidence interval.}
 }
 \value{
 matrix with estimates, standard errors and confidence interval limits.

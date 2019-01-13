@@ -7,10 +7,11 @@
 out_infit(object, se = TRUE)
 }
 \arguments{
-\item{object}{an object of class "Rm", a fitted Rasch model oder partial
-credit model using  the functions RM or PCM in package eRm.}
+\item{object}{An object of class "Rm", a fitted Rasch model or partial
+credit model using  the functions RM or PCM in package eRm, or an object of class "pcmodel",
+ a fitted partial credit model using the function pcmodel in package psychotools.}
 
-\item{se}{if TRUE the standard errors will be included.}
+\item{se}{If TRUE the standard errors will be included.}
 }
 \value{
 an object of class outfit containing:

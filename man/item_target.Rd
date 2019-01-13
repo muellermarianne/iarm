@@ -7,8 +7,9 @@
 item_target(obj)
 }
 \arguments{
-\item{obj}{object of class "eRm" (but not "dRm"), a fitted partial
-credit model using  the function PCM in package eRm.}
+\item{obj}{An object of class "eRm" (but not "dRm"), a fitted partial
+credit model using  the function PCM in package eRm or of class "pcmodel"
+(from package psychotools).}
 }
 \value{
 vector with item targets.

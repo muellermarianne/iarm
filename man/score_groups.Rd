@@ -7,9 +7,9 @@
 score_groups(dat.items, label = FALSE)
 }
 \arguments{
-\item{dat.items}{data frame with the responses to the items.}
+\item{dat.items}{A data frame with the responses to the items.}
 
-\item{label}{if TRUE the levels of the group factor are named according to the split used,
+\item{label}{If TRUE the levels of the group factor are named according to the split used,
 if FALSE (default) the group factor has levels 1 and 2.}
 }
 \value{

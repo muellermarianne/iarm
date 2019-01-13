@@ -4,8 +4,8 @@
 #' of roughly equal size, without taking into account persons with extreme scores.
 #'
 #' The score groups are used for tests of item homogeneity.
-#' @param     dat.items data frame with the responses to the items.
-#' @param     label if TRUE the levels of the group factor are named according to the split used,
+#' @param     dat.items A data frame with the responses to the items.
+#' @param     label If TRUE the levels of the group factor are named according to the split used,
 #' if FALSE (default) the group factor has levels 1 and 2.
 #' @export
 #' @return   Score group variable, a factor with two levels.

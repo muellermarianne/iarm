@@ -7,8 +7,9 @@
 item_restscore(object)
 }
 \arguments{
-\item{object}{an object of class "Rm", a fitted Rasch model oder partial
-credit model using  the functions RM or PCM in package eRm.}
+\item{object}{An object of class "Rm", a fitted Rasch model or partial
+credit model using  the functions RM or PCM in package eRm, or an object of class "pcmodel",
+ a fitted partial credit model using the function pcmodel in package psychotools.}
 }
 \value{
 a matrix containing:

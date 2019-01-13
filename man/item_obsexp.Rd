@@ -7,8 +7,9 @@
 item_obsexp(object)
 }
 \arguments{
-\item{object}{object of class "Rm", a fitted Rasch model oder partial
-credit model using  the functions RM or PCM in package eRm.}
+\item{object}{An object of class "Rm", a fitted Rasch model or partial
+credit model using  the functions RM or PCM in package eRm, or an object of class "pcmodel",
+ a fitted partial credit model using the function pcmodel in package psychotools.}
 }
 \value{
 list with observed and expected mean scores together with standardized residuals for the two score groups.
@@ -21,7 +22,6 @@ this comparison can indicate which items might be responsable.
 \examples{
 rm.mod <- RM(amts[,4:13])
 item_obsexp(rm.mod)
-
 pc.mod <- PCM(desc2[,5:14])
 item_obsexp(pc.mod)
 }

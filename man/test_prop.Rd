@@ -7,7 +7,7 @@
 test_prop(object)
 }
 \arguments{
-\item{object}{object of class eRm, a fitted Rasch model oder partial
+\item{object}{An object of class eRm, a fitted Rasch model oder partial
 credit model using  the functions RM or PCM in package eRm.}
 }
 \value{

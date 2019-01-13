@@ -7,7 +7,7 @@
 gamma_coef(x)
 }
 \arguments{
-\item{x}{is a matrix of counts.}
+\item{x}{A matrix of counts.}
 }
 \value{
 Gamma coefficient, standard error and p value.
