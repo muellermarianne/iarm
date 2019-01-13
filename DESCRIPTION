@@ -1,7 +1,11 @@
 Package: iarm
 Type: Package
 Title: Item Analysis in Rasch Models
+<<<<<<< HEAD
 Version: 0.1.2
+=======
+Version: 0.1.1
+>>>>>>> 93981d7b6f6b559e828e6b5cb0c5280a3a9c6425
 Authors@R: person("Marianne", "Mueller", email = "mllm@zhaw.ch", role = c("aut", "cre"))
 Description: Tools to assess model fit and identify misfitting items for Rasch models (RM) and partial credit models (PCM). Included are item fit statistics, item-restscore association, conditional likelihood ratio tests, assessment of measurement error, estimates of the reliability and test targeting.
 License: GPL-2
