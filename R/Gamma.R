@@ -37,20 +37,20 @@ gamma_coef<-function(x){
 
 #' Conditional and Partial Gamma coefficients
 #'
-#' Calculates conditional und partial Gamma coefficients with confidence intervals
-#' @param x A factor.
-#' @param y A factor.
-#' @param z A factor.
-#' @param freq A vector of counts.
-#' @param data Data frame containing the factors x, y, z and the corresponding frequencies freq.
+#' Calculates conditional und partial Gamma coefficients for x and y given z with confidence intervals.
+#' @param x,y,z  Three numeric vectors or factors.
 #' @param conf.level Confidence level for the returned confidence interval.
 #' @return matrix with estimates, standard errors and confidence interval limits.
 #' @export
 #' @author Marianne Mueller
+#' @examples # Partial Gamma coefficient between an item and an exogenuous variable, given the total score
+#' score <- apply(amts[, 4:13], 1, sum, na.rm = TRUE)
+#' fz <- cut(score,unique(quantile(score,0:10/10)))
+#' partgam(amts$firstww,amts$sex,fz)
 #' @references Davis, J. A. A Partial coefficient for Goodman and Kruskal's Gamma.
 #'  \emph{Journal of the American Statistical Association}, 62 (317), 1967, pp. 189-193.
-partgam <- function(x, y, z, freq, data, conf.level = 0.95){
-  xxx <- xtabs(freq ~ x + y + z, data = data)
+partgam <- function(x, y, z, conf.level = 0.95){
+  xxx <- xtabs(~ x + y + fz)
   n <- dim(xxx)[1]
   m <- dim(xxx)[2]
   k <- dim(xxx)[3]

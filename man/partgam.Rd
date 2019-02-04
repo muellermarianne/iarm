@@ -4,18 +4,10 @@
 \alias{partgam}
 \title{Conditional and Partial Gamma coefficients}
 \usage{
-partgam(x, y, z, freq, data, conf.level = 0.95)
+partgam(x, y, z, conf.level = 0.95)
 }
 \arguments{
-\item{x}{A factor.}
-
-\item{y}{A factor.}
-
-\item{z}{A factor.}
-
-\item{freq}{A vector of counts.}
-
-\item{data}{Data frame containing the factors x, y, z and the corresponding frequencies freq.}
+\item{x, y, z}{Three numeric vectors or factors.}
 
 \item{conf.level}{Confidence level for the returned confidence interval.}
 }
@@ -23,7 +15,13 @@ partgam(x, y, z, freq, data, conf.level = 0.95)
 matrix with estimates, standard errors and confidence interval limits.
 }
 \description{
-Calculates conditional und partial Gamma coefficients with confidence intervals
+Calculates conditional und partial Gamma coefficients for x and y given z with confidence intervals.
+}
+\examples{
+# Partial Gamma coefficient between an item and an exogenuous variable, given the total score
+score <- apply(amts[, 4:13], 1, sum, na.rm = TRUE)
+fz <- cut(score,unique(quantile(score,0:10/10)))
+partgam(amts$firstww,amts$sex,fz)
 }
 \references{
 Davis, J. A. A Partial coefficient for Goodman and Kruskal's Gamma.
