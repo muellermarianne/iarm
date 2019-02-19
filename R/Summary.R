@@ -1,4 +1,4 @@
-#' Generate two score groups
+#' Generate two Score Groups
 #'
 #' Creates a grouping variable which divides the sample in two groups (high and low scorers)
 #' of roughly equal size, without taking into account persons with extreme scores.

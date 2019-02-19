@@ -33,11 +33,11 @@ expvar <- function(data, coeff){
   list(Ehat=Ehat, VarX=VarX)
 }
 
-#' Observed and expected item mean scores
+#' Observed and Expected Item Mean Scores
 #'
 #' Homogeneity of item responses in the low and high score groups is analyzed by looking at observed and expected item mean scores
 #' together with standardized residuals. If the Andersen's CLR test has shown some evidence against homogeneity,
-#' this comparison can indicate which items might be responsable.
+#' this comparison can indicate which items might be responsible.
 #' @param  object An object of class "Rm", a fitted Rasch model or partial
 #' credit model using  the functions RM or PCM in package eRm, or an object of class "pcmodel",
 #'  a fitted partial credit model using the function pcmodel in package psychotools.
@@ -207,7 +207,7 @@ out_infit <- function(object,se=TRUE){
   result
 }
 
-#' Print method for output of out_infit
+#' Print Method for the Output of out_infit
 #' @param x object of class outfit.
 #' @param ... arguments passed to other functions.
 #' @export
@@ -225,7 +225,7 @@ print.outfit <- function(x, ...){
   }
 }
 
-# #' Computes Outfit and Infit statistic for a bootstrap sample
+# #' Computes Outfit and Infit Statistics for a Bootstrap Sample
 # #' Model fit with mRm or pcmodel (much faster then eRm)
 # #' @importFrom mRm mrm
 # #' @importFrom psychotools elementary_symmetric_functions
@@ -285,7 +285,7 @@ outin_boot <- function(data, model= c("RM","PCM","pcmodel")){
   c((Outfit-1)/Outfit.se, (Infit-1)/Infit.se)
 }
 
-#' Computes bootstrapping p values for Outfit and Infit statistics
+#' Computes Bootstrapping P Values for Outfit and Infit Statistics
 #'@param object  an object of class "Rm" (output of RM or PCM) or class "pcmodel"
 #'@param B Number of replications.
 #'@export
@@ -349,7 +349,7 @@ boot_fit <- function(object,B){
   result
 }
 
-#' Print method for output of boot_fit
+#' Print Method for the Output of boot_fit
 #' @param x object of class bootfit.
 #' @param ... arguments passed to other functions.
 #' @export
@@ -416,7 +416,7 @@ pscore_poly  <- function(i,x,r,coeff){
 }
 
 
-#' Item restscore association
+#' Item Restscore Association
 #'
 #' The observed Gamma coefficient between the score of a single item and the total score of the remaining items
 #' is compared with the corresponding expected Gamma coefficient under the Rasch model.

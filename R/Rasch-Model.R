@@ -6,7 +6,7 @@ W_thresh <- function(x){
   W1
 }
 
-#' Computation of item targets for polytomous models
+#' Computation of Item Targets for Polytomous Models
 #'
 #' The item target is the value of the person parameter where
 #' item information is maximized.
@@ -46,7 +46,7 @@ item_target <- function(obj){
   invisible(target)
 }
 
-#' Conditional likelihood ratio tests (CLR)
+#' Conditional Likelihood Ratio Tests (CLR)
 #'
 #' The conditional likelihood ratio tests compare item parameters in low and high score groups
 #' for an overall test of homogeneity, and in groups defined by the levels of exogenous factors
@@ -54,7 +54,7 @@ item_target <- function(obj){
 #' @author Marianne Mueller
 #' @references Andersen, E.B. (1973). A goodness of fit test for the Rasch model. \emph{Psychometrika}, 38, 123-140.
 #' @param dat.items A data frame with the responses to the items.
-#' @param dat.exo  A data frame consisting of exogenuous factor variables.
+#' @param dat.exo  A data frame consisting of exogenous factor variables.
 #' @param model If model="RM" a Rasch model will be fitted,
 #' if model="PCM" a partial credit model for polytomous items is used.
 #' @return matrix with test statistics, df and p values.

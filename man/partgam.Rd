@@ -2,7 +2,7 @@
 % Please edit documentation in R/Gamma.R
 \name{partgam}
 \alias{partgam}
-\title{Conditional and Partial Gamma coefficients}
+\title{Conditional and Partial Gamma Coefficients}
 \usage{
 partgam(x, y, z, conf.level = 0.95)
 }
@@ -15,7 +15,7 @@ partgam(x, y, z, conf.level = 0.95)
 matrix with estimates, standard errors and confidence interval limits.
 }
 \description{
-Calculates conditional und partial Gamma coefficients for x and y given z with confidence intervals.
+Calculates conditional and partial Gamma coefficients for x and y given z with confidence intervals.
 }
 \examples{
 # Partial Gamma coefficient between an item and an exogenuous variable, given the total score

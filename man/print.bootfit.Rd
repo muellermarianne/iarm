@@ -2,7 +2,7 @@
 % Please edit documentation in R/Item-Fit.R
 \name{print.bootfit}
 \alias{print.bootfit}
-\title{Print method for output of boot_fit}
+\title{Print Method for the Output of boot_fit}
 \usage{
 \method{print}{bootfit}(x, ...)
 }
@@ -12,5 +12,5 @@
 \item{...}{arguments passed to other functions.}
 }
 \description{
-Print method for output of boot_fit
+Print Method for the Output of boot_fit
 }

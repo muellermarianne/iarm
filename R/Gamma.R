@@ -1,10 +1,10 @@
-#' Gamma coefficient of two ordinal variables
+#' Gamma Coefficient of two Ordinal Variables
 #'
 #' Calculates the Gamma coefficient as a measure of association between two ordinal variables.
 #' @param x A matrix of counts.
 #' @return Gamma coefficient, standard error and p value.
 #' @author Marianne Mueller; original version Greg Rodd
-#' @references  Agresti, A. \emph{Categorical Data Analsysis}. John Wiley & Sons, 2013, pp. 57-59.
+#' @references  Agresti, A. \emph{Categorical Data Analysis}. John Wiley & Sons, 2013, pp. 57-59.
 #' @import stats
 #' @export
 #' @examples # Association between raw score and sex of patients
@@ -35,9 +35,9 @@ gamma_coef<-function(x){
   c(gamma = gamma, se = sqrt(sigma2), pvalue = pwert)
 }
 
-#' Conditional and Partial Gamma coefficients
+#' Conditional and Partial Gamma Coefficients
 #'
-#' Calculates conditional und partial Gamma coefficients for x and y given z with confidence intervals.
+#' Calculates conditional and partial Gamma coefficients for x and y given z with confidence intervals.
 #' @param x,y,z  Three numeric vectors or factors.
 #' @param conf.level Confidence level for the returned confidence interval.
 #' @return matrix with estimates, standard errors and confidence interval limits.

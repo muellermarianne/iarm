@@ -2,7 +2,7 @@
 % Please edit documentation in R/Item-Fit.R
 \name{print.outfit}
 \alias{print.outfit}
-\title{Print method for output of out_infit}
+\title{Print Method for the Output of out_infit}
 \usage{
 \method{print}{outfit}(x, ...)
 }
@@ -12,5 +12,5 @@
 \item{...}{arguments passed to other functions.}
 }
 \description{
-Print method for output of out_infit
+Print Method for the Output of out_infit
 }

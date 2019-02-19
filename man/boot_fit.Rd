@@ -2,7 +2,7 @@
 % Please edit documentation in R/Item-Fit.R
 \name{boot_fit}
 \alias{boot_fit}
-\title{Computes bootstrapping p values for Outfit and Infit statistics}
+\title{Computes Bootstrapping P Values for Outfit and Infit Statistics}
 \usage{
 boot_fit(object, B)
 }
@@ -15,5 +15,5 @@ boot_fit(object, B)
 object of class bootfit with outfit and infit statistics and corresponding p values.
 }
 \description{
-Computes bootstrapping p values for Outfit and Infit statistics
+Computes Bootstrapping P Values for Outfit and Infit Statistics
 }

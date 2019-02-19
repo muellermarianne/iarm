@@ -2,14 +2,14 @@
 % Please edit documentation in R/Rasch-Model.R
 \name{clr_tests}
 \alias{clr_tests}
-\title{Conditional likelihood ratio tests (CLR)}
+\title{Conditional Likelihood Ratio Tests (CLR)}
 \usage{
 clr_tests(dat.items, dat.exo = NULL, model = c("RM", "PCM"))
 }
 \arguments{
 \item{dat.items}{A data frame with the responses to the items.}
 
-\item{dat.exo}{A data frame consisting of exogenuous factor variables.}
+\item{dat.exo}{A data frame consisting of exogenous factor variables.}
 
 \item{model}{If model="RM" a Rasch model will be fitted,
 if model="PCM" a partial credit model for polytomous items is used.}

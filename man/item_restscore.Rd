@@ -2,7 +2,7 @@
 % Please edit documentation in R/Item-Fit.R
 \name{item_restscore}
 \alias{item_restscore}
-\title{Item restscore association}
+\title{Item Restscore Association}
 \usage{
 item_restscore(object)
 }

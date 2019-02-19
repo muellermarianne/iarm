@@ -2,7 +2,7 @@
 % Please edit documentation in R/Item-Fit.R
 \name{item_obsexp}
 \alias{item_obsexp}
-\title{Observed and expected item mean scores}
+\title{Observed and Expected Item Mean Scores}
 \usage{
 item_obsexp(object)
 }
@@ -17,7 +17,7 @@ list with observed and expected mean scores together with standardized residuals
 \description{
 Homogeneity of item responses in the low and high score groups is analyzed by looking at observed and expected item mean scores
 together with standardized residuals. If the Andersen's CLR test has shown some evidence against homogeneity,
-this comparison can indicate which items might be responsable.
+this comparison can indicate which items might be responsible.
 }
 \examples{
 rm.mod <- RM(amts[,4:13])

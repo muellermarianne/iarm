@@ -2,12 +2,12 @@
 % Please edit documentation in R/Person-Fit.R
 \name{test_prop}
 \alias{test_prop}
-\title{Properties of the test}
+\title{Properties of the Test}
 \usage{
 test_prop(object)
 }
 \arguments{
-\item{object}{An object of class eRm, a fitted Rasch model oder partial
+\item{object}{An object of class eRm, a fitted Rasch model or partial
 credit model using  the functions RM or PCM in package eRm.}
 }
 \value{

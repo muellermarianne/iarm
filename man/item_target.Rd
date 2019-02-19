@@ -2,7 +2,7 @@
 % Please edit documentation in R/Rasch-Model.R
 \name{item_target}
 \alias{item_target}
-\title{Computation of item targets for polytomous models}
+\title{Computation of Item Targets for Polytomous Models}
 \usage{
 item_target(obj)
 }

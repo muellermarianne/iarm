@@ -2,7 +2,7 @@
 % Please edit documentation in R/Person-Fit.R
 \name{person_estimates}
 \alias{person_estimates}
-\title{Person estimates with MLE and WLE}
+\title{Person Estimates with MLE and WLE}
 \usage{
 person_estimates(object, properties = F)
 }

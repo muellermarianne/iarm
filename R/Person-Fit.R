@@ -1,4 +1,4 @@
-#' Person estimates with MLE and WLE
+#' Person Estimates with MLE and WLE
 #'
 #' Computes Person estimates with maximum likelihood estimation (MLE) and  weighted likelihood estimation (WLE) for raw scores 0 to m.
 #' @param  object An object of class "Rm", a fitted Rasch model or partial
@@ -82,10 +82,10 @@ person_estimates <- function(object, properties = F){
     }
 }
 
-#' Properties of the test
+#' Properties of the Test
 #'
 #' Information summarizing measurement quality of the test and test targeting.
-#' @param  object An object of class eRm, a fitted Rasch model oder partial
+#' @param  object An object of class eRm, a fitted Rasch model or partial
 #' credit model using  the functions RM or PCM in package eRm.
 #' @import eRm
 #' @importFrom psychotools elementary_symmetric_functions

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Gamma.R
 \name{gamma_coef}
 \alias{gamma_coef}
-\title{Gamma coefficient of two ordinal variables}
+\title{Gamma Coefficient of two Ordinal Variables}
 \usage{
 gamma_coef(x)
 }
@@ -25,7 +25,7 @@ score <- apply(desc2[, 5:14], 1, sum, na.rm = TRUE)
 gamma_coef(table(score,desc2$group))
 }
 \references{
-Agresti, A. \emph{Categorical Data Analsysis}. John Wiley & Sons, 2013, pp. 57-59.
+Agresti, A. \emph{Categorical Data Analysis}. John Wiley & Sons, 2013, pp. 57-59.
 }
 \author{
 Marianne Mueller; original version Greg Rodd

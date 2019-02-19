@@ -2,7 +2,7 @@
 % Please edit documentation in R/Summary.R
 \name{score_groups}
 \alias{score_groups}
-\title{Generate two score groups}
+\title{Generate two Score Groups}
 \usage{
 score_groups(dat.items, label = FALSE)
 }
