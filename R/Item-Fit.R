@@ -45,7 +45,7 @@ expvar <- function(data, coeff){
 #' @author Marianne Mueller
 #' @import eRm
 #' @importFrom psychotools pcmodel threshpar
-#' @importFrom stats symnum
+#' @importFrom stats symnum coef
 #' @export
 #' @examples
 #' rm.mod <- RM(amts[,4:13])
@@ -113,6 +113,7 @@ item_obsexp <- function(object){
 #' @author Marianne Mueller
 #' @import eRm
 #' @importFrom psychotools pcmodel threshpar
+#' @importFrom stats coef pnorm na.exclude
 #' @export
 #' @references Christensen, K. B. , Kreiner, S. & Mesbah, M. (Eds.)
 #' \emph{Rasch Models in Health}. Iste and Wiley (2013), pp. 86 - 90.
@@ -424,6 +425,7 @@ pscore_poly  <- function(i,x,r,coeff){
 #' credit model using  the functions RM or PCM in package eRm, or an object of class "pcmodel",
 #'  a fitted partial credit model using the function pcmodel in package psychotools.
 #' @import eRm
+#' @importFrom vcdExtra GKgamma
 #' @export
 #' @return a matrix containing:
 #' \item{observed}{observed gamma coefficients}
@@ -466,7 +468,11 @@ item_restscore <- function(object){
   m <- sum(mi)
   score <- apply(X,1,sum,na.rm=T)
   restscore <- matrix(rep(score,k),ncol=k)- X
-  mm <- t(apply(rbind(X,restscore),2,function(x){gamma_coef(table(x[1:n],x[(n+1):(2*n)]))[1:2]}))
+  mm <- t(apply(rbind(X,restscore),2,function(x){
+    gc <- GKgamma(table(x[1:n],x[(n+1):(2*n)]))
+    gc <- c(gc[[1]],gc[[4]])
+    gc
+    }))
   #! beob gammas.se sind nicht gleich wie Svend's
   # erwartete gammas
   rvneu <- factor(score,levels = 0:m)
@@ -476,7 +482,7 @@ item_restscore <- function(object){
     pmat <- sapply(0:mi[i], function(x){sapply(0:(m - mi[i]),function(r){pscore_poly(i, x, r + x, coeff)})})
     npmat[[i]] <- nmat*pmat
   }
-  expected <- sapply(npmat, function(x){gamma_coef(x)[1]})
+  expected <- sapply(npmat, function(x){GKgamma(x)[[1]]})
   pvalue <- round(ifelse((mm[, 1] - expected) > 0, 2*(1 - pnorm((mm[, 1] - expected)/mm[, 2])), 2*(pnorm((mm[, 1] - expected)/mm[, 2]))), digits = 4)
   mm <- cbind(observed = mm[, 1], expected, se = mm[, 2], pvalue)
   symp <- symnum(pvalue, cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), symbols=c("*** ", "** ", "* ", "." , " "))

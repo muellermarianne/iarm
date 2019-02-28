@@ -8,6 +8,7 @@
 #' @import eRm
 #' @importFrom PP PP_gpcm
 #' @importFrom psychotools personpar
+#' @importFrom stats coef uniroot
 #' @export
 #' @return If properties = False a matrix containing:
 #' \item{Raw score}{raw score}

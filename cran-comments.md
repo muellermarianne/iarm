@@ -1,3 +1,14 @@
+## Resubmission
+
+This is a resubmission. In this version I have:
+
+* Added a reference on the methods used in the DESCRIPTION.
+
+* Deleted the function gamma_coef which was based on code written by another author. This function is already included  in the R package vcdExtra and I import it now from vcdExtra.
+
+* Added  importFrom stats  "coef", "complete.cases",   "na.exclude", "optimize","pchisq", "pnorm", "qnorm", "rnorm", "runif", "uniroot","xtabs"  to the NAMESPACE file.
+
+
 
 ## Tests environment 
 

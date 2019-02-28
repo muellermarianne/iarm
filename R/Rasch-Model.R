@@ -17,6 +17,7 @@ W_thresh <- function(x){
 #' @author Marianne Mueller
 #' @import eRm
 #' @importFrom psychotools pcmodel threshpar
+#' @importFrom stats optimize
 #' @export
 #' @examples
 #'  pc.mod <- PCM(desc2[, 5:14])
@@ -59,7 +60,7 @@ item_target <- function(obj){
 #' if model="PCM" a partial credit model for polytomous items is used.
 #' @return matrix with test statistics, df and p values.
 #' @import eRm
-#' @importFrom stats symnum
+#' @importFrom stats symnum complete.cases pchisq rnorm runif
 #' @importFrom psychotools pcmodel
 #' @export
 #' @examples #CLR overall test and test of  no DIF for agegrp and sex

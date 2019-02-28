@@ -1,46 +1,10 @@
-#' Gamma Coefficient of two Ordinal Variables
-#'
-#' Calculates the Gamma coefficient as a measure of association between two ordinal variables.
-#' @param x A matrix of counts.
-#' @return Gamma coefficient, standard error and p value.
-#' @author Marianne Mueller; original version Greg Rodd
-#' @references  Agresti, A. \emph{Categorical Data Analysis}. John Wiley & Sons, 2013, pp. 57-59.
-#' @import stats
-#' @export
-#' @examples # Association between raw score and sex of patients
-#' score <- apply(amts[, 4:13], 1, sum, na.rm = TRUE)
-#' gamma_coef(table(score,amts$sex))
-#'
-#' # Association between raw score and indication group of patients
-#' score <- apply(desc2[, 5:14], 1, sum, na.rm = TRUE)
-#' gamma_coef(table(score,desc2$group))
-gamma_coef<-function(x){
-  n <- nrow(x)
-  m <- ncol(x)
-  pic <- pid <- matrix(0, nrow=n, ncol=m)
-  rowx <- row(x)
-  colx <- col(x)
-  for(i in 1:n){
-    for(j in 1:m){
-      pic[i, j] <- sum(x[rowx < i & colx < j]) + sum(x[rowx > i & colx > j])
-      pid[i, j] <- sum(x[rowx < i & colx > j]) + sum(x[rowx > i & colx < j])
-    }
-  }
-  C <- sum(pic*x)/2
-  D <- sum(pid*x)/2
-  psi <- 2*(D*pic - C*pid)/(C + D)^2
-  sigma2 <- sum(x*psi^2) - sum(x*psi)^2
-  gamma <- (C - D)/(C + D)
-  pwert <- 2*(1-pnorm(abs(gamma)/sqrt(sigma2)))
-  c(gamma = gamma, se = sqrt(sigma2), pvalue = pwert)
-}
-
 #' Conditional and Partial Gamma Coefficients
 #'
 #' Calculates conditional and partial Gamma coefficients for x and y given z with confidence intervals.
 #' @param x,y,z  Three numeric vectors or factors.
 #' @param conf.level Confidence level for the returned confidence interval.
 #' @return matrix with estimates, standard errors and confidence interval limits.
+#' @importFrom stats xtabs qnorm
 #' @export
 #' @author Marianne Mueller
 #' @examples # Partial Gamma coefficient between an item and an exogenuous variable, given the total score
