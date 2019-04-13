@@ -3,18 +3,14 @@
 #' Calculates conditional and partial Gamma coefficients for x and y given z with confidence intervals.
 #' @param x,y,z  Three numeric vectors or factors.
 #' @param conf.level Confidence level for the returned confidence interval.
-#' @return matrix with estimates, standard errors and confidence interval limits.
+#' @return data frame with estimates, standard errors and confidence interval limits.
 #' @importFrom stats xtabs qnorm
 #' @export
 #' @author Marianne Mueller
-#' @examples # Partial Gamma coefficient between an item and an exogenuous variable, given the total score
-#' score <- apply(amts[, 4:13], 1, sum, na.rm = TRUE)
-#' fz <- cut(score,unique(quantile(score,0:10/10)))
-#' partgam(amts$firstww,amts$sex,fz)
 #' @references Davis, J. A. A Partial coefficient for Goodman and Kruskal's Gamma.
 #'  \emph{Journal of the American Statistical Association}, 62 (317), 1967, pp. 189-193.
 partgam <- function(x, y, z, conf.level = 0.95){
-  xxx <- xtabs(~ x + y + fz)
+  xxx <- xtabs(~ x + y + z)
   n <- dim(xxx)[1]
   m <- dim(xxx)[2]
   k <- dim(xxx)[3]
@@ -52,6 +48,74 @@ partgam <- function(x, y, z, conf.level = 0.95){
   mm
 }
 
+#' Partial Gamma Coefficients to detect DIF
+#'
+#' Partial Gamma coefficients between the items and exogenuous factor variables controlled for the total score
+#' can be used to detect Differental Item Functioning (DIF).
+#' @param dat.items A data frame with the responses to the items.
+#' @param dat.exo  A data frame consisting of exogenous factor variables.
+#' @return data frame with Gamma coefficents, standard error, p value und confidence limits for every
+#' pair of an item and an exogenous variable.
+#' @seealso  {\code{\link{partgam_LD}}}
+#' @export
+#' @author Marianne Mueller
+#' @examples
+#' partgam_DIF(amts[,4:13],amts[,2:3])
+#' @references Bjorner, J., Kreiner, S., Ware, J., Damsgaard, M. and Bech, P. Differential item
+#' functioning in the Danish translation of the SF-36. \emph{Journal of Clinical Epidemiology},
+#' 51 (11), 1998, pp. 1189-1202.
+partgam_DIF <- function(dat.items,dat.exo){
+  score <- apply(dat.items,1,sum,na.rm=T)
+  fz <- cut(score,unique(quantile(score,0:10/10)),include.lowest=T)
+  k <- dim(dat.items)[2]
+  l <- dim(dat.exo)[2]
+  result <- data.frame(Item=character(), Var=character(), gamma=double(),se=double(),pvalue=double(),sig=character(),lower=double(),upper=double(),stringsAsFactors=FALSE)
+  z <- 1
+  for (i in 1:k){
+    for (j in 1:l){
+      mm <- partgam(dat.items[, i], dat.exo[, j], fz)
+      pvalue <- round(ifelse(mm[dim(mm)[1],1] > 0, 2*(1 - pnorm(mm[dim(mm)[1],1]/mm[dim(mm)[1],2])), 2*(pnorm(mm[dim(mm)[1],1]/mm[dim(mm)[1],2]))), digits = 4)
+      symp <- symnum(pvalue, cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), symbols = c(" ***", " **", " *", " .", " "))
+      result[z,] <- c(names(dat.items)[i],names(dat.exo)[j],mm[dim(mm)[1],1:2],pvalue,symp,mm[dim(mm)[1],3:4])
+      z <- z + 1
+    }
+  }
+  result
+}
+
+#' Partial Gamma Coefficients to detect LD
+#'
+#' Partial Gamma coefficients between pairs of items controlled for the rest score
+#' can be used to detect local dependence  (LD).
+#' @param dat.items A data frame with the responses to the items.
+#' @return data frame with Gamma coefficents, standard error, p value und confidence limits for every
+#' pair of items.
+#' @export
+#' @author Marianne Mueller
+#' @seealso  \code{\link{partgam_DIF}}
+#' @examples
+#' partgam_LD(amts[,4:13])
+#' @references Christensen, K. B. , Kreiner, S. & Mesbah, M. (Eds.)
+#' \emph{Rasch Models in Health}. Iste and Wiley (2013), pp. 133 - 135.
+partgam_LD <- function(dat.items){
+  score <- apply(dat.items,1,sum,na.rm=T)
+  ok <- complete.cases(dat.items)
+  k <- dim(dat.items)[2]
+  result <- data.frame(Item1=character(),Item2=character(), gamma=double(),se=double(),pvalue=double(),sig=character(),lower=double(),upper=double(),stringsAsFactors=FALSE)
+  z <- 1
+  for (i in 1:(k-1)){
+    for (j in (i+1):k){
+      rest <- score[ok] - dat.items[ok,j]
+      fac.z <- cut(rest,unique(quantile(rest,0:10/10)),include.lowest=T)
+      mm <- partgam(dat.items[ok,i], dat.items[ok,j],fac.z)
+      pvalue <- round(ifelse(mm[dim(mm)[1],1] > 0, 2*(1 - pnorm(mm[dim(mm)[1],1]/mm[dim(mm)[1],2])), 2*(pnorm(mm[dim(mm)[1],1]/mm[dim(mm)[1],2]))), digits = 4)
+      symp <- symnum(pvalue, cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), symbols = c(" ***", " **", " *", " .", " "))
+      result[z,] <- c(names(dat.items)[i],names(dat.items)[j],mm[dim(mm)[1],1:2],pvalue,symp,mm[dim(mm)[1],3:4])
+      z <- z + 1
+    }
+  }
+  result
+}
 
 
 
