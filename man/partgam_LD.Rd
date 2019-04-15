@@ -2,7 +2,7 @@
 % Please edit documentation in R/Gamma.R
 \name{partgam_LD}
 \alias{partgam_LD}
-\title{Partial Gamma Coefficients to detect LD}
+\title{Partial Gamma to detect Local Dependence (LD)}
 \usage{
 partgam_LD(dat.items)
 }
@@ -10,12 +10,14 @@ partgam_LD(dat.items)
 \item{dat.items}{A data frame with the responses to the items.}
 }
 \value{
-data frame with Gamma coefficents, standard error, p value und confidence limits for every
+data frame with Gamma coefficents, standard errors, p values und confidence limits for every
 pair of items.
 }
 \description{
+Rasch models assume locally independent items. There should be no substantial correlation left between two items
+once the underlying factor has been taken into account.
 Partial Gamma coefficients between pairs of items controlled for the rest score
-can be used to detect local dependence  (LD).
+can be used to assess this requirement.
 }
 \examples{
 partgam_LD(amts[,4:13])

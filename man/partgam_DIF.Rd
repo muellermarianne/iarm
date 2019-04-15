@@ -2,7 +2,7 @@
 % Please edit documentation in R/Gamma.R
 \name{partgam_DIF}
 \alias{partgam_DIF}
-\title{Partial Gamma Coefficients to detect DIF}
+\title{Partial Gamma to detect Differential Item Functioning (DIF)}
 \usage{
 partgam_DIF(dat.items, dat.exo)
 }
@@ -12,12 +12,13 @@ partgam_DIF(dat.items, dat.exo)
 \item{dat.exo}{A data frame consisting of exogenous factor variables.}
 }
 \value{
-data frame with Gamma coefficents, standard error, p value und confidence limits for every
+data frame with Gamma coefficents, standard errors, p values und confidence limits for every
 pair of an item and an exogenous variable.
 }
 \description{
-Partial Gamma coefficients between the items and exogenuous factor variables controlled for the total score
-can be used to detect Differental Item Functioning (DIF).
+Items should function in the same way for all subgroups of persons. An item
+shows differential item functioning (DIF) if there is a significant association between the item score and
+an exogenous variable, controlling for the scale score. Partial Gamma coefficients are used as test statistics.
 }
 \examples{
 partgam_DIF(amts[,4:13],amts[,2:3])

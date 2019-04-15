@@ -21,6 +21,9 @@ Calculates conditional and partial Gamma coefficients for x and y given z with c
 Davis, J. A. A Partial coefficient for Goodman and Kruskal's Gamma.
  \emph{Journal of the American Statistical Association}, 62 (317), 1967, pp. 189-193.
 }
+\seealso{
+\code{\link{partgam_DIF}}, \code{\link{partgam_LD}}
+}
 \author{
 Marianne Mueller
 }

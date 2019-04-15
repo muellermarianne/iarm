@@ -5,6 +5,7 @@
 #' @param conf.level Confidence level for the returned confidence interval.
 #' @return data frame with estimates, standard errors and confidence interval limits.
 #' @importFrom stats xtabs qnorm
+#' @seealso  \code{\link{partgam_DIF}}, \code{\link{partgam_LD}}
 #' @export
 #' @author Marianne Mueller
 #' @references Davis, J. A. A Partial coefficient for Goodman and Kruskal's Gamma.
@@ -48,14 +49,16 @@ partgam <- function(x, y, z, conf.level = 0.95){
   mm
 }
 
-#' Partial Gamma Coefficients to detect DIF
+#' Partial Gamma to detect Differential Item Functioning (DIF)
 #'
-#' Partial Gamma coefficients between the items and exogenuous factor variables controlled for the total score
-#' can be used to detect Differental Item Functioning (DIF).
+#' Items should function in the same way for all subgroups of persons. An item
+#' shows differential item functioning (DIF) if there is a significant association between the item score and
+#' an exogenous variable, controlling for the scale score. Partial Gamma coefficients are used as test statistics.
 #' @param dat.items A data frame with the responses to the items.
 #' @param dat.exo  A data frame consisting of exogenous factor variables.
-#' @return data frame with Gamma coefficents, standard error, p value und confidence limits for every
+#' @return data frame with Gamma coefficents, standard errors, p values und confidence limits for every
 #' pair of an item and an exogenous variable.
+#' @importFrom stats quantile
 #' @seealso  {\code{\link{partgam_LD}}}
 #' @export
 #' @author Marianne Mueller
@@ -83,13 +86,16 @@ partgam_DIF <- function(dat.items,dat.exo){
   result
 }
 
-#' Partial Gamma Coefficients to detect LD
+#' Partial Gamma to detect Local Dependence (LD)
 #'
+#' Rasch models assume locally independent items. There should be no substantial correlation left between two items
+#' once the underlying factor has been taken into account.
 #' Partial Gamma coefficients between pairs of items controlled for the rest score
-#' can be used to detect local dependence  (LD).
+#' can be used to assess this requirement.
 #' @param dat.items A data frame with the responses to the items.
-#' @return data frame with Gamma coefficents, standard error, p value und confidence limits for every
+#' @return data frame with Gamma coefficents, standard errors, p values und confidence limits for every
 #' pair of items.
+#' @importFrom stats quantile
 #' @export
 #' @author Marianne Mueller
 #' @seealso  \code{\link{partgam_DIF}}

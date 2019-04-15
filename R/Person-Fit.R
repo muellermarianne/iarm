@@ -9,7 +9,7 @@
 #' @import eRm
 #' @importFrom PP PP_gpcm
 #' @importFrom psychotools personpar
-#' @importFrom stats coef uniroot
+#' @importFrom stats coef uniroot na.omit
 #' @export
 #' @return If properties = False a matrix containing:
 #' \item{Raw score}{raw score}
@@ -100,6 +100,7 @@ person_estimates <- function(object, properties = F, allperson = F){
 #'  a fitted partial credit model using the function pcmodel in package psychotools.
 #' @import eRm
 #' @importFrom psychotools elementary_symmetric_functions personpar
+#' @importFrom stats na.omit
 #' @export
 #' @return a list containing:
 #' \item{Separation reliability}{the person separation reliability as calculated in package eRm for objects of class "Rm".}
