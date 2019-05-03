@@ -9,7 +9,7 @@ partgam_DIF(dat.items, dat.exo)
 \arguments{
 \item{dat.items}{A data frame with the responses to the items.}
 
-\item{dat.exo}{A data frame consisting of exogenous factor variables.}
+\item{dat.exo}{A single grouping factor or a data frame consisting of several exogenous factor variables.}
 }
 \value{
 data frame with Gamma coefficents, standard errors, p values und confidence limits for every

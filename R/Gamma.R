@@ -55,7 +55,7 @@ partgam <- function(x, y, z, conf.level = 0.95){
 #' shows differential item functioning (DIF) if there is a significant association between the item score and
 #' an exogenous variable, controlling for the scale score. Partial Gamma coefficients are used as test statistics.
 #' @param dat.items A data frame with the responses to the items.
-#' @param dat.exo  A data frame consisting of exogenous factor variables.
+#' @param dat.exo  A single grouping factor or a data frame consisting of several exogenous factor variables.
 #' @return data frame with Gamma coefficents, standard errors, p values und confidence limits for every
 #' pair of an item and an exogenous variable.
 #' @importFrom stats quantile
@@ -68,6 +68,12 @@ partgam <- function(x, y, z, conf.level = 0.95){
 #' functioning in the Danish translation of the SF-36. \emph{Journal of Clinical Epidemiology},
 #' 51 (11), 1998, pp. 1189-1202.
 partgam_DIF <- function(dat.items,dat.exo){
+  if (!is.data.frame(dat.exo)) {
+    gname <- deparse(substitute(dat.exo))
+    dat.exo <- data.frame(dat.exo)
+    names(dat.exo) <- gname
+  }
+  if (is.null(names(dat.items))) names(dat.items) <- paste("I",1:dim(dat.items)[2],sep="")
   score <- apply(dat.items,1,sum,na.rm=T)
   fz <- cut(score,unique(quantile(score,0:10/10)),include.lowest=T)
   k <- dim(dat.items)[2]

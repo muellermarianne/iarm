@@ -1,25 +1,22 @@
-## Resubmission
+## Package update
 
-This is a resubmission. In this version I have:
+In this version I have:
 
-* Added a reference on the methods used in the DESCRIPTION.
-
-* Deleted the function gamma_coef which was based on code written by another author. This function is already included  in the R package vcdExtra and I import it now from vcdExtra.
-
-* Added  importFrom stats  "coef", "complete.cases",   "na.exclude", "optimize","pchisq", "pnorm", "qnorm", "rnorm", "runif", "uniroot","xtabs"  to the NAMESPACE file.
-
+* fixed a bug  for input arguments of partgam,
+* added functions partgam_LD and partgam_DIF,
+* made small changes to the functions person_estimates and test_prop. 
 
 
 ## Tests environment 
 
 * local Windows 10 install, R 3.5.3 (64 bit)
-* win-builder R Under development (unstable) (2019-01-31 r76038)
-* ubuntu 12.04 (on travis-ci), R 3.1.2
+* ubuntu 14.04 (on travis-ci), R 3.5.3
 * Mac OS X 10.13.3 (on travis-ci)
+* win-builder (devel) R 3.6.0 beta 
 
 
 ## R CMD check results
-There were no errors or warnings.
+There were no errors, notes or warnings.
 
 
 
