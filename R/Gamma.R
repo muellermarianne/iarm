@@ -56,7 +56,7 @@ partgam <- function(x, y, z, conf.level = 0.95){
 #' an exogenous variable, controlling for the scale score. Partial Gamma coefficients are used as test statistics.
 #' @param dat.items A data frame with the responses to the items.
 #' @param dat.exo  A single grouping factor or a data frame consisting of several exogenous factor variables.
-#' @return data frame with Gamma coefficents, standard errors, p values und confidence limits for every
+#' @return data frame with Gamma coefficients, standard errors, p values and confidence limits for every
 #' pair of an item and an exogenous variable.
 #' @importFrom stats quantile
 #' @seealso  {\code{\link{partgam_LD}}}
@@ -99,7 +99,7 @@ partgam_DIF <- function(dat.items,dat.exo){
 #' Partial Gamma coefficients between pairs of items controlled for the rest score
 #' can be used to assess this requirement.
 #' @param dat.items A data frame with the responses to the items.
-#' @return data frame with Gamma coefficents, standard errors, p values und confidence limits for every
+#' @return data frame with Gamma coefficients, standard errors, p values and confidence limits for every
 #' pair of items.
 #' @importFrom stats quantile
 #' @export

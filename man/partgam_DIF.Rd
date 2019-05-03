@@ -12,7 +12,7 @@ partgam_DIF(dat.items, dat.exo)
 \item{dat.exo}{A single grouping factor or a data frame consisting of several exogenous factor variables.}
 }
 \value{
-data frame with Gamma coefficents, standard errors, p values und confidence limits for every
+data frame with Gamma coefficients, standard errors, p values and confidence limits for every
 pair of an item and an exogenous variable.
 }
 \description{

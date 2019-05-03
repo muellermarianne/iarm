@@ -10,7 +10,7 @@ partgam_LD(dat.items)
 \item{dat.items}{A data frame with the responses to the items.}
 }
 \value{
-data frame with Gamma coefficents, standard errors, p values und confidence limits for every
+data frame with Gamma coefficients, standard errors, p values and confidence limits for every
 pair of items.
 }
 \description{
