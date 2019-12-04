@@ -1,7 +1,7 @@
 Package: iarm
 Type: Package
 Title: Item Analysis in Rasch Models
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: person("Marianne", "Mueller", email = "mllm@zhaw.ch", role = c("aut", "cre"))
 Description: Tools to assess model fit and identify misfitting items for Rasch models (RM) and partial credit models (PCM). Included are item fit statistics, item-restscore association, conditional likelihood ratio tests, assessment of measurement error, estimates of the reliability and test targeting as described in Christensen et al. (Eds.) (2013, ISBN:978-1-84821-222-0).
 License: GPL-2
@@ -9,7 +9,6 @@ Depends: R (>= 3.5.0), eRm
 Imports:
     PP,
     psychotools,
-    mRm,
     stats,
     utils,
     vcdExtra,

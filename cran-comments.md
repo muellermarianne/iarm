@@ -2,9 +2,11 @@
 
 In this version I have:
 
-* fixed a bug  for input arguments of partgam,
-* added functions partgam_LD and partgam_DIF,
-* made small changes to the functions person_estimates and test_prop. 
+* fixed a bug  in item_obsexp,
+* included corrections for multiple testing,
+* made small changes to the functions person_estimates and clr_tests,
+* changed boot_fit to not require mRm (archived) anymore. 
+
 
 
 ## Tests environment 
