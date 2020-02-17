@@ -1,5 +1,9 @@
 # News for package 'iarm'
 
+## Changes in Version 0.4.0
+
+* added a plotting function for ICCs.
+
 ## Changes in Version 0.3.0
 
 * Correction method for multiple testing included.
