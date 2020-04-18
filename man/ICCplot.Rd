@@ -50,7 +50,7 @@ to evaluate differential item function. Options are "yes" or "no".}
 \item{difvar}{Chooses the variable which will be used to evaluate differential item functioning. Only
 necessary when dif="yes".}
 
-\item{diflabels}{A character vector indicating the labels to values of the variable chosen to evaluate differential item functioning.
+\item{diflabels}{A character vector indicating the labels to values of the variable choosen to evaluate differential item functioning.
 Only necessary when dif="yes".}
 
 \item{difstats}{Displays the partial gamma coefficient to indicate the magnitude of differential item
