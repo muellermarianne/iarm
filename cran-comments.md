@@ -2,19 +2,20 @@
 
 In this version I have:
 
-* fixed a bug in item_obsexp,
-* included corrections for multiple testing,
-* made small changes to the functions person_estimates and clr_tests,
-* changed boot_fit to not require mRm (archived) anymore. 
+* added the function ICCplot() for graphical analysis of item fit 
+  and differential item functioning (DIF),
+* included unadjusted and adjusted p values in several functions,
+* changed partgam_LD() to calculate the rest score in both possibe ways,
+* fixed a bug in item.restscore(). 
 
 
 
 ## Tests environment 
 
-* local Windows 10 install, R 3.6.1 (64 bit)
+* local Windows 10 install, R 3.6.3 (64 bit)
 * ubuntu 16.04 (on travis-ci), R 3.6.1
 * Mac OS X 10.13.3 (on travis-ci), R 3.6.1
-* win-builder, R Under development (unstable) (2019-12-02 r77499)
+* win-builder, R-devel  4.0.0. RC (2020-04-17 r78247)
 
 
 ## R CMD check results

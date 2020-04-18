@@ -9,7 +9,8 @@ ICCplot(data, itemnumber, pallete = "Paired", xticks = 1,
   grid = "yes", cinumber = 6, itemdescrip = "", axis.rumm = "yes",
   dif = "no", difvar = NA, diflabels = c("Group1", "Group 2",
   "Group 3", "Group 4", "Group5"), difstats = "yes",
-  title = "Item Characteristic Curve", icclabel = "yes")
+  title = "Item Characteristic Curve", icclabel = "yes",
+  xaxistitle = "Theta", yaxistitle = "Item Score")
 }
 \arguments{
 \item{data}{An object of class "data.frame" containing the items (include all items present in the model).
@@ -59,6 +60,10 @@ functioning. Options are "yes" or "no". Only necessary when dif="yes".}
 
 \item{icclabel}{Displays the labels of Expected Item Score and Observed Item Score. Options are "yes"
 or "no".}
+
+\item{xaxistitle}{A character vector. The x-axis title.}
+
+\item{yaxistitle}{A character vector. The y-axis title.}
 }
 \description{
 Plots Item Characteristic Curves for dichotomous and polytomous items. The plot can display observed scores as
@@ -84,7 +89,7 @@ dif="yes", difvar=desc2$gender, diflabels=c("Men", "Women"))
 
 # Creates a plot with three items using 5 class intervals and evaluating DIF according to gender
 ICCplot(desc2[,5:13], itemnumber=1:3, method="cut", cinumber=5,
-itemdescrip=c("Item 1","Item 2","Item 3"), dif="yes",
+itemdescrip=c("Item 1","Item 2","Item 3"), dif="yes"
 difvar=desc2$gender, diflabels=c("Men", "Women"))
 }
 }

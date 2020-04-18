@@ -1,7 +1,7 @@
 Package: iarm
 Type: Package
 Title: Item Analysis in Rasch Models
-Version: 0.4.0
+Version: 0.4.1
 Authors@R: c(
   person("Marianne", "Mueller", email = "mllm@zhaw.ch", role = c("aut", "cre")),
   person("Pedro Henrique","Ribeiro Santiago", email = "pedro.ribeirosantiago@adelaide.edu.au", role = "ctb"))

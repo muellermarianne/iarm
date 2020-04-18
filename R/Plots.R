@@ -30,13 +30,15 @@
 #' to evaluate differential item function. Options are "yes" or "no".
 #' @param difvar Chooses the variable which will be used to evaluate differential item functioning. Only
 #' necessary when dif="yes".
-#' @param diflabels A character vector indicating the labels to values of the variable chosen to evaluate differential item functioning.
+#' @param diflabels A character vector indicating the labels to values of the variable choosen to evaluate differential item functioning.
 #' Only necessary when dif="yes".
 #' @param difstats Displays the partial gamma coefficient to indicate the magnitude of differential item
 #' functioning. Options are "yes" or "no". Only necessary when dif="yes".
 #' @param title A character vector. The title of the plot.
 #' @param icclabel Displays the labels of Expected Item Score and Observed Item Score. Options are "yes"
 #' or "no".
+#' @param xaxistitle A character vector. The x-axis title.
+#' @param yaxistitle A character vector. The y-axis title.
 #' @importFrom psychotools pcmodel raschmodel personpar
 #' @importFrom Hmisc cut2
 #' @import ggplot2
@@ -60,13 +62,14 @@
 #'
 #' # Creates a plot with three items using 5 class intervals and evaluating DIF according to gender
 #' ICCplot(desc2[,5:13], itemnumber=1:3, method="cut", cinumber=5,
-#' itemdescrip=c("Item 1","Item 2","Item 3"), dif="yes",
+#' itemdescrip=c("Item 1","Item 2","Item 3"), dif="yes"
 #' difvar=desc2$gender, diflabels=c("Men", "Women"))
 #'}
 ICCplot <- function(data, itemnumber, pallete='Paired', xticks=1.0, yticks=0.5,
-                     thetain=-6.000, thetaend=6.000, method="score", grid="yes", cinumber=6, itemdescrip="",
-                     axis.rumm="yes", dif="no", difvar=NA, diflabels=c("Group1", "Group 2", "Group 3", "Group 4", "Group5"),
-                     difstats="yes", title="Item Characteristic Curve", icclabel="yes") {
+                    thetain=-6.000, thetaend=6.000, method="score", grid="yes", cinumber=6, itemdescrip="",
+                    axis.rumm="yes", dif="no", difvar=NA, diflabels=c("Group1", "Group 2", "Group 3", "Group 4", "Group5"),
+                    difstats="yes", title="Item Characteristic Curve", icclabel="yes",
+                    xaxistitle="Theta", yaxistitle="Item Score") {
 
   pltC <- function() {
 
@@ -113,7 +116,7 @@ ICCplot <- function(data, itemnumber, pallete='Paired', xticks=1.0, yticks=0.5,
 
     maxr <- max(data, na.rm=TRUE)
     minr <- min(data, na.rm=TRUE)
-    if(minr>0) {data2 <- (data - minr)}
+    if(minr>0) {data2 <- (data - minr)} #Checks whether the minimum value is 0
     if(minr==0) {data2 <- data}
     else {}
     adat <- as.data.frame(data2)
@@ -123,7 +126,7 @@ ICCplot <- function(data, itemnumber, pallete='Paired', xticks=1.0, yticks=0.5,
     for (i in 1:ncol(adat)) {
       cati[i] <- max(adat[,i])
       mxsc <- sum(cati)
-    }
+    } #Calculates the number of categories
 
     ttsc <- rowSums(adat, na.rm=TRUE)
     rtsc <- rowSums(adat[,-itmc], na.rm=TRUE)
@@ -241,7 +244,7 @@ ICCplot <- function(data, itemnumber, pallete='Paired', xticks=1.0, yticks=0.5,
                            limits=classbreak) +
         scale_y_continuous(breaks = round(seq(min(0), max(cend$score)+0.5, by = yticks),1)) +
         scale_color_brewer(palette = pallete, name="", labels=c("Expected Item Score", "Average Observed Item Score")) +
-        labs(y = "Item Score", x = "Theta") +
+        labs(y = yaxistitle, x = xaxistitle) +
         geom_point(na.rm=TRUE) +
         geom_text(data=annotations,aes(x=xpos,y=ypos,hjust=hjustvar,vjust=vjustvar,label=annotateText), color="black")
     }
@@ -261,10 +264,12 @@ ICCplot <- function(data, itemnumber, pallete='Paired', xticks=1.0, yticks=0.5,
       names(obs) <- c("score", "obsmean")
 
       if ((maxr-minr)>1) {
-      pseq <- seq(from=psav[2,1], to=psav[(nrow(psav)-1),1], by=1)
+        pseq <- seq(from=psav[2,1], to=psav[(nrow(psav)-1),1], by=1)
       }
       else {
-        pseq <- as.numeric(unlist(regmatches(capture.output(ppar)[1], gregexpr("[[:digit:]]+", capture.output(ppar)[1]))))
+        pseq <- as.numeric(unlist(regmatches(capture.output(ppar)
+                                             [c(seq(1, length(capture.output(ppar)), 2))], gregexpr("[[:digit:]]+",
+                                                                                                    capture.output(ppar)[c(seq(1, length(capture.output(ppar)), 2))]))))
       }
       ppnw <- cbind(ppar, pseq)
       ppnw <- as.data.frame(ppnw)
@@ -303,7 +308,7 @@ ICCplot <- function(data, itemnumber, pallete='Paired', xticks=1.0, yticks=0.5,
                            limits=classbreak) +
         scale_y_continuous(breaks = round(seq(min(0), max(cend$score)+0.5, by = yticks),1)) +
         scale_color_brewer(palette = pallete, name="", labels=c("Expected Item Score", "Average Observed Item Score")) +
-        labs(y = "Item Score", x = "Theta") +
+        labs(y = yaxistitle, x = xaxistitle) +
         geom_point(na.rm=TRUE) +
         geom_text(data=annotations,aes(x=xpos,y=ypos,hjust=hjustvar,vjust=vjustvar,label=annotateText), color="black")
     }
@@ -410,7 +415,7 @@ ICCplot <- function(data, itemnumber, pallete='Paired', xticks=1.0, yticks=0.5,
         scale_color_manual(values=c("#F0F0F0","#1F78B4","#B2DF8A","#33A02C","#FB9A99",
                                     "#E31A1C","#FDBF6F","#FF7F00","#CAB2D6","#6A3D9A","#FFFF99",
                                     "#B15928"), name="", labels=c("Expected Item Score", diflabels)) +
-        labs(y = "Item Score", x = "Theta") +
+        labs(y = yaxistitle, x = xaxistitle) +
         geom_point(na.rm=TRUE) +
         geom_line(na.rm=TRUE) +
         geom_text(data=annotations,aes(x=xpos,y=ypos,hjust=hjustvar,vjust=vjustvar,label=annotateText), color="black") +
@@ -513,7 +518,7 @@ ICCplot <- function(data, itemnumber, pallete='Paired', xticks=1.0, yticks=0.5,
         scale_color_manual(values=c("#F0F0F0","#1F78B4","#B2DF8A","#33A02C","#FB9A99",
                                     "#E31A1C","#FDBF6F","#FF7F00","#CAB2D6","#6A3D9A","#FFFF99",
                                     "#B15928"), name="", labels=c("Expected Item Score", diflabels)) +
-        labs(y = "Item Score", x = "Theta") +
+        labs(y = yaxistitle, x = xaxistitle) +
         geom_point(na.rm=TRUE) +
         geom_line(na.rm=TRUE) +
         geom_text(data=annotations,aes(x=xpos,y=ypos,hjust=hjustvar,vjust=vjustvar,label=annotateText), color="black") +
@@ -545,3 +550,4 @@ ICCplot <- function(data, itemnumber, pallete='Paired', xticks=1.0, yticks=0.5,
     paste("Please press Zoom on the Plots window to see the plot")
   }
 }
+
