@@ -50,8 +50,10 @@ expvar <- function(data, coeff){
 #' @examples
 #' rm.mod <- RM(amts[,4:13])
 #' item_obsexp(rm.mod)
+#' \dontrun{
 #' pc.mod <- PCM(desc2[,5:14])
 #' item_obsexp(pc.mod)
+#' }
 item_obsexp <- function(object){
   if (!any("Rm"%in%class(object),class(object) =="pcmodel")) stop("object must be of class Rm or pcmodel!")
   if(class(object)[1]=="pcmodel") object$model <- "pcmodel"
