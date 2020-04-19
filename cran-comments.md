@@ -13,7 +13,7 @@ In this version I have:
 ## Tests environment 
 
 * local Windows 10 install, R 3.6.3 (64 bit)
-* ubuntu 16.04 (on travis-ci), R 3.6.1
+* ubuntu 16.04 (on travis-ci), R 3.6.2
 * Mac OS X 10.13.6 (on travis-ci), R 3.6.2
 * win-builder, R-devel  4.0.0. RC (2020-04-17 r78247)
 
