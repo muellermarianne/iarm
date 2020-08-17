@@ -2,12 +2,9 @@
 
 In this version I have:
 
-* added the function ICCplot() for graphical analysis of item fit 
-  and differential item functioning (DIF),
-* included unadjusted and adjusted p values in several functions,
-* changed partgam_LD() to calculate the rest score in both possibe ways,
-* fixed a bug in item.restscore(). 
-
+* changed partgam_LD and partgam_DIF to directly use scores or rest scores instead of categorized values.
+* fixed a bug in ICCplot. 
+* updated ICCplot for R 4.0.0 
 
 
 ## Tests environment 

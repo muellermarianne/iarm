@@ -4,7 +4,8 @@
 \name{desc2}
 \alias{desc2}
 \title{Depression Screening DESC-II}
-\format{A data frame with 799 rows and 14 variables.
+\format{
+A data frame with 799 rows and 14 variables.
 \describe{
   \item{code}{id number of the patient}
   \item{group}{a factor with levels  psychiatry, otolaryngology, cardiology, neurology  for the indication group  of the patient.}
@@ -20,7 +21,8 @@
     \item{DESC_2_8}{discouraged}
     \item{DESC_2_9}{withdrawal}
     \item{DESC_2_10}{thinking of taking one's life}
-}}
+}
+}
 \description{
 A dataset containing the responses of 799 patients (indication group psychiatry, otolaryngology, cardiology, neurology)
 to the short form DESC-II with 10 items.
