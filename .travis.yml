@@ -4,3 +4,4 @@ language: R
 warnings_are_errors: true
 os: osx
 cache: packages
+install: travis_wait mvn install
