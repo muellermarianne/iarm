@@ -11,8 +11,8 @@ In this version I have:
 
 * local Windows 10 install, R 4.0.2 (64 bit)
 * ubuntu 16.04 (on travis-ci), R 4.0.0
-* Mac OS X 10.13.6 (on travis-ci), R 3.6.
-* win-builder, R-devel  4.0.0. RC (2020-04-17 r78247)
+* Mac OS X 10.13.6 High Sierra (R-Hub) R Release, CRANs setup
+* win-builder, R-devel (2020-08-17 r79033)
 
 
 ## R CMD check results
