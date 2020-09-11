@@ -2,6 +2,6 @@
 # für MAC test, linux ist default
 language: R
 warnings_are_errors: true
-os: osx
+# os: osx
 cache: packages
-install: travis_wait mvn install
+# install: travis_wait mvn install
