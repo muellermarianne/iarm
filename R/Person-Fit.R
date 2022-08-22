@@ -45,7 +45,7 @@ person_estimates <- function(object, properties = F, allperson = F){
       respm <- rbind(rep(0, k), lower.tri(matrix(1, k, k)) + diag(k))
     } else {
       if (object$model == "PCM"){
-        coeff <- thresholds(object)[[3]][[1]][, -1]- mean(thresholds(object)[[3]][[1]][, 1])
+        coeff <- thresholds(object)[[3]][[1]][, -1]- mean(thresholds(object)[[3]][[1]][, -1], na.rm=T)
       } else {
         coeff <- coef(threshpar(object),type="matrix")
       }
@@ -131,13 +131,13 @@ test_prop <- function(object){
     if (object$model == "PCM"){
       k <- dim(object$X)[2]
       mi <- apply(object$X, 2, max, na.rm = TRUE)
-      thresh1 <- thresholds(object)[[3]][[1]][, -1] - mean(thresholds(object)[[3]][[1]][, 1])
+      thresh1 <- thresholds(object)[[3]][[1]][, -1] - mean(thresholds(object)[[3]][[1]][, -1], na.rm=T)
       koeff <- lapply(as.list(as.data.frame(t(thresh1))), function(x) cumsum(na.omit(x)))
     } else {
       k <- dim(object$data)[2]
       mi <- apply(object$data, 2, max, na.rm = TRUE)
       thresh1 <- coef(threshpar(object),type="matrix")
-      koeff <- lapply(as.list(as.data.frame(t(thresh1))), function(x) cumsum(na.omit(x)))
+      koeff <- lapply(threshpar(object), cumsum)
     }
   }
   m <- sum(mi)
