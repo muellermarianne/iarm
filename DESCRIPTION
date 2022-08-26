@@ -1,7 +1,7 @@
 Package: iarm
 Type: Package
 Title: Item Analysis in Rasch Models
-Version: 0.4.2
+Version: 0.4.3
 Authors@R: c(
   person("Marianne", "Mueller", email = "marianne.mueller@math.ethz.ch", role = c("aut", "cre")),
   person("Pedro Henrique","Ribeiro Santiago", email = "pedro.ribeirosantiago@adelaide.edu.au", role = "ctb"))
@@ -13,6 +13,7 @@ Imports:
     Hmisc,
     psychotools,
     stats,
+    utils,
     vcdExtra,
 Encoding: UTF-8
 LazyData: true
