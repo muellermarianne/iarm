@@ -5,3 +5,4 @@
 ^git$
 ^cran-comments\.md$
 ^\.travis\.yml$
+^\.github$

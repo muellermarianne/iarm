@@ -9,27 +9,17 @@ In this version I have:
 
 ## Tests environment 
 
-* local Windows 10 install, R 4.0.2 (64 bit)
+* local Windows 10 install, R 4.2.1 (64 bit)
+* Fedora Linux (R-hub), r-devel,clang,gfortran
 * ubuntu 16.04 (on travis-ci), R 4.0.0
 * Mac OS X 10.13.6 High Sierra (R-Hub) R Release, CRANs setup
-* win-builder, R-devel (2020-09-09 r79174)
+* win-builder, R-devel (2022-08-25 r82762)
 
 
 
 ## R CMD check results
-There were no errors or warnings.
+There were no errors, warnings or notes.
 
-There was 1  NOTE:
-
-checking CRAN incoming feasibility ... NOTE
-Maintainer: 'Marianne Mueller <marianne.mueller@math.ethz.ch>'
-
-New maintainer:
-  Marianne Mueller <marianne.mueller@math.ethz.ch>
-Old maintainer(s):
-  Marianne Mueller <mllm@zhaw.ch>
-
- I changed my email address.  
 
 
 
